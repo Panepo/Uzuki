@@ -1,17 +1,57 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { imageUpload } from '../actions'
+import ImageUploaderM from '../components/ImageUploaderM'
 import './Content.css'
 
-export default class Content extends Component {
+class Content extends Component {
+  renderContent = () => {
+    const { contentDisplay } = this.props
+
+    if (contentDisplay) {
+      return (
+        <div className="layout-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--6-col">
+          Content
+        </div>
+      )
+    }
+  }
   render() {
+    const { imageUpload } = this.props
     return (
       <main className="layout-main mdl-layout__content">
         <div className="layout-container mdl-grid">
-          <div className="mdl-cell mdl-cell--3-col">Drawer</div>
-          <div className="layout-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--9-col">
-            Content
+          <div className="mdl-cell mdl-cell--1-col mdl-cell--hide-tablet mdl-cell--hide-phone" />
+          <div className="layout-content mdl-color--white mdl-shadow--4dp mdl-color-text--grey-800 mdl-cell mdl-cell--4-col">
+            <ImageUploaderM propFunc={imageUpload} />
           </div>
+          {this.renderContent()}
         </div>
       </main>
     )
   }
 }
+
+Content.propTypes = {
+  imageUpload: PropTypes.func.isRequired,
+  contentDisplay: PropTypes.bool.isRequired
+}
+
+const mapStateToProps = function(state) {
+  return {
+    contentDisplay: state.reducerLayout.contentDisplay
+  }
+}
+
+const mapDispatchToProps = function(dispatch) {
+  return {
+    imageUpload: bindActionCreators(imageUpload, dispatch)
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Content)

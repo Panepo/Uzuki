@@ -3,12 +3,11 @@ export const listLink = [
 ]
 
 export const listDrawer = [
-  { text: 'SRCNN', link: 'http://arxiv.org/abs/1501.00092' },
-  { text: 'waifu2x', link: 'https://github.com/nagadomi/waifu2x' },
-  { text: 'SRGAN', link: 'https://arxiv.org/abs/1609.04802' },
-  { text: 'Tensorflow', link: 'https://www.tensorflow.org/' },
+  {
+    text: 'face-api.js',
+    link: 'https://github.com/justadudewhohacks/face-api.js'
+  },
   { text: 'Tensorflow.js', link: 'https://js.tensorflow.org/' },
-  { text: 'Keras', link: 'https://github.com/keras-team/keras' },
   { text: 'React', link: 'https://facebook.github.io/react/' },
   { text: 'Redux', link: 'http://redux.js.org/' },
   { text: 'Material Design Lite', link: 'https://getmdl.io/' }

@@ -4,11 +4,11 @@ const initialState = {
   contentDisplay: false
 }
 
-export default function reducerTensorFlow(state = initialState, action) {
+export default function reducerLayout(state = initialState, action) {
   switch (action.type) {
     case IMAGE_UPLOAD:
       return Object.assign({}, state, {
-        contentDisplay: action.display
+        contentDisplay: action.bool
       })
     default:
       return state
