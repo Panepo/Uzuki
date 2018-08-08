@@ -6,13 +6,19 @@ import './ImageUploader.css'
 export default class ImageUploaderM extends Component {
   constructor(props) {
     super(props)
-    this.state = { file: [], isLoading: true }
+    this.state = { file: [], isLoading: true, isBusy: false }
     this.handleUpload = this.handleUpload.bind(this)
     this.handleClear = this.handleClear.bind(this)
   }
 
   componentDidMount = () => {
     setTimeout(() => this.setState({ isLoading: false }), 5000)
+  }
+
+  componentWillReceiveProps = nextProps => {
+    if (this.props.serverTick !== nextProps.serverTick) {
+      this.setState({ isBusy: false })
+    }
   }
 
   handleUpload = event => {
@@ -37,10 +43,11 @@ export default class ImageUploaderM extends Component {
     }
 
     if (data.length > 0) {
-      setTimeout(() => propFunc(modelId, true, data.length), 1000)
       this.setState({
-        file: data
+        file: data,
+        isBusy: true
       })
+      setTimeout(() => propFunc(modelId, true, data.length), 1000)
     } else {
       propFunc(modelId, false, 0)
       this.setState({
@@ -82,10 +89,21 @@ export default class ImageUploaderM extends Component {
     return <FlipMove className="flip-wrapper">{output}</FlipMove>
   }
 
+  renderBusy = () => {
+    if (this.state.isBusy) {
+      return (
+        <div className="mdl-typography--subhead">
+          <div className="mdl-card__actions mdl-card--border imageUploader_border" />
+          <span>Processing...</span>
+        </div>
+      )
+    }
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
-        <div>
+        <div className="mdl-typography--subhead">
           <span>Loading...</span>
           <div className="mdl-progress mdl-js-progress mdl-progress__indeterminate" />
         </div>
@@ -111,9 +129,9 @@ export default class ImageUploaderM extends Component {
               Clear Image
             </button>
           </div>
-          <div className="mdl-card__actions mdl-card--border imageUploader_border">
-            {this.renderGallery()}
-          </div>
+          <div className="mdl-card__actions mdl-card--border imageUploader_border" />
+          {this.renderGallery()}
+          {this.renderBusy()}
         </div>
       )
     }
@@ -125,12 +143,14 @@ ImageUploaderM.propTypes = {
   imageWidth: PropTypes.number,
   imageHeight: PropTypes.number,
   imageSize: PropTypes.number,
-  propFunc: PropTypes.func
+  propFunc: PropTypes.func,
+  serverTick: PropTypes.number
 }
 
 ImageUploaderM.defaultProps = {
   modelId: 'ImageUploader',
   imageWidth: 100,
   imageHeight: 100,
-  imageSize: 5000000
+  imageSize: 5000000,
+  serverTick: 0
 }

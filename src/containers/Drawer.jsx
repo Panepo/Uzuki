@@ -9,7 +9,7 @@ export default class Drawer extends Component {
       let linkKey = 'drawer-link' + i.toString()
       let linkTemp = (
         <a
-          className="mdl-navigation__link"
+          className="mdl-navigation__link mdl-typography--subhead"
           key={linkKey}
           href={listDrawer[i].link}
         >
@@ -24,7 +24,9 @@ export default class Drawer extends Component {
   render() {
     return (
       <div className="mdl-layout__drawer">
-        <span className="mdl-layout-title">Reference</span>
+        <span className="mdl-layout-title mdl-typography--subhead">
+          Reference
+        </span>
         <nav className="mdl-navigation">{this.generateLink()}</nav>
       </div>
     )

@@ -19,13 +19,13 @@ class Content extends Component {
     }
   }
   render() {
-    const { imageUpload } = this.props
+    const { imageUpload, tfjsTick } = this.props
     return (
       <main className="layout-main mdl-layout__content">
         <div className="layout-container mdl-grid">
           <div className="mdl-cell mdl-cell--1-col mdl-cell--hide-tablet mdl-cell--hide-phone" />
           <div className="layout-content mdl-color--white mdl-shadow--4dp mdl-color-text--grey-800 mdl-cell mdl-cell--4-col">
-            <ImageUploaderM propFunc={imageUpload} />
+            <ImageUploaderM propFunc={imageUpload} serverTick={tfjsTick} />
           </div>
           {this.renderContent()}
         </div>
@@ -36,12 +36,14 @@ class Content extends Component {
 
 Content.propTypes = {
   imageUpload: PropTypes.func.isRequired,
-  contentDisplay: PropTypes.bool.isRequired
+  contentDisplay: PropTypes.bool.isRequired,
+  tfjsTick: PropTypes.number.isRequired
 }
 
 const mapStateToProps = function(state) {
   return {
-    contentDisplay: state.reducerLayout.contentDisplay
+    contentDisplay: state.reducerLayout.contentDisplay,
+    tfjsTick: state.reducerTensor.serverTick
   }
 }
 

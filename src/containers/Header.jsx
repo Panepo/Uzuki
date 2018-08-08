@@ -25,7 +25,7 @@ export default class Header extends Component {
     return (
       <header className="layout-header mdl-layout__header mdl-layout__header--scroll mdl-color--grey-100 mdl-color-text--grey-800">
         <div className="mdl-layout__header-row mdl-shadow--4dp">
-          <span className="mdl-layout-title">
+          <span className="mdl-layout-title mdl-typography--title">
             <b>Uzuki Boss Sensor</b>
           </span>
           <div className="mdl-layout-spacer" />

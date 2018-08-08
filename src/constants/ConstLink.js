@@ -10,5 +10,6 @@ export const listDrawer = [
   { text: 'Tensorflow.js', link: 'https://js.tensorflow.org/' },
   { text: 'React', link: 'https://facebook.github.io/react/' },
   { text: 'Redux', link: 'http://redux.js.org/' },
-  { text: 'Material Design Lite', link: 'https://getmdl.io/' }
+  { text: 'Material Design Lite', link: 'https://getmdl.io/' },
+  { text: 'FlipMove', link: 'https://github.com/joshwcomeau/react-flip-move' }
 ]
