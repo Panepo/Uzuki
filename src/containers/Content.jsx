@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { imageUpload } from '../actions'
 import ImageUploaderM from '../components/ImageUploaderM'
+import WebCamPlayer from '../components/WebCamPlayer'
 import './Content.css'
 
 class Content extends Component {
@@ -13,7 +14,7 @@ class Content extends Component {
     if (contentDisplay) {
       return (
         <div className="layout-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--6-col">
-          Content
+          <WebCamPlayer />
         </div>
       )
     }
