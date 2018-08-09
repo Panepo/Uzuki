@@ -16,7 +16,7 @@ async function getFaceDesc(modelId, length) {
   let output = []
 
   for (let i = 0; i < length; i += 1) {
-    const imgId = modelId + '_imageUploader_image_' + i.toString()
+    const imgId = modelId + '_imageGallery_image_' + i.toString()
     const fullFaceDescriptions = await faceapi.allFaces(imgId, minConfidence)
 
     console.log(fullFaceDescriptions)

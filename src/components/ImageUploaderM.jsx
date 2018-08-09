@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import FlipMove from 'react-flip-move'
+import ImageGallery from './ImageGallery'
+import MdlBusyBar from './MdlBusyBar'
 import './ImageUploader.css'
 
 export default class ImageUploaderM extends Component {
@@ -9,6 +10,7 @@ export default class ImageUploaderM extends Component {
     this.state = { file: [], isLoading: true, isBusy: false }
     this.handleUpload = this.handleUpload.bind(this)
     this.handleClear = this.handleClear.bind(this)
+    this.handleTrain = this.handleTrain.bind(this)
   }
 
   componentDidMount = () => {
@@ -44,10 +46,8 @@ export default class ImageUploaderM extends Component {
 
     if (data.length > 0) {
       this.setState({
-        file: data,
-        isBusy: true
+        file: data
       })
-      setTimeout(() => propFunc(modelId, true, data.length), 1000)
     } else {
       propFunc(modelId, false, 0)
       this.setState({
@@ -64,50 +64,21 @@ export default class ImageUploaderM extends Component {
     })
   }
 
-  renderGallery = () => {
-    const { modelId, imageWidth, imageHeight } = this.props
-    const output = []
-    let outTemp
-    let outKeyTemp
-
-    for (let i = 0; i < this.state.file.length; i += 1) {
-      outKeyTemp = modelId + '_imageUploader_image_' + i.toString()
-      outTemp = (
-        <img
-          className={'imageUploader_gallery'}
-          id={outKeyTemp}
-          key={outKeyTemp}
-          src={this.state.file[i]}
-          width={imageWidth}
-          height={imageHeight}
-          alt={this.state.text}
-        />
-      )
-      output.push(outTemp)
-    }
-
-    return <FlipMove className="flip-wrapper">{output}</FlipMove>
-  }
-
-  renderBusy = () => {
-    if (this.state.isBusy) {
-      return (
-        <div className="mdl-typography--subhead">
-          <div className="mdl-card__actions mdl-card--border imageUploader_border" />
-          <span>Processing...</span>
-        </div>
-      )
+  handleTrain = () => {
+    const { modelId, propFunc } = this.props
+    if (this.state.file.length > 0) {
+      this.setState({
+        isBusy: true
+      })
+      setTimeout(() => propFunc(modelId, true, this.state.file.length), 1000)
     }
   }
 
   render() {
+    const { modelId, imageWidth, imageHeight } = this.props
+
     if (this.state.isLoading) {
-      return (
-        <div className="mdl-typography--subhead">
-          <span>Loading...</span>
-          <div className="mdl-progress mdl-js-progress mdl-progress__indeterminate" />
-        </div>
-      )
+      return <MdlBusyBar modelText={'Loading...'} />
     } else {
       return (
         <div>
@@ -128,10 +99,26 @@ export default class ImageUploaderM extends Component {
             >
               Clear Image
             </button>
+            <button
+              className="imageUploader_Button mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+              onClick={this.handleTrain}
+            >
+              Train Network
+            </button>
           </div>
           <div className="mdl-card__actions mdl-card--border imageUploader_border" />
-          {this.renderGallery()}
-          {this.renderBusy()}
+          <ImageGallery
+            modelId={modelId}
+            modelClass={'imageUploader_gallery'}
+            imageSrc={this.state.file}
+            imageWidth={imageWidth}
+            imageHeight={imageHeight}
+          />
+          <MdlBusyBar
+            modelSwitch={this.state.isBusy}
+            modelText={'Processing...'}
+            modelBorderUp
+          />
         </div>
       )
     }
