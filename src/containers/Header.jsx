@@ -11,8 +11,7 @@ export default class Header extends Component {
         <a
           className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
           key={linkKey}
-          href={listLink[i].link}
-        >
+          href={listLink[i].link}>
           {listLink[i].text}
         </a>
       )
@@ -26,7 +25,7 @@ export default class Header extends Component {
       <header className="layout-header mdl-layout__header mdl-layout__header--scroll mdl-color--grey-100 mdl-color-text--grey-800">
         <div className="mdl-layout__header-row mdl-shadow--4dp">
           <span className="mdl-layout-title mdl-typography--title">
-            <b>Uzuki Boss Sensor</b>
+            <b>Uzuki</b>
           </span>
           <div className="mdl-layout-spacer" />
           <nav className="mdl-navigation">{this.generateLink()}</nav>

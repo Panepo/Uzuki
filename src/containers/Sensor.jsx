@@ -167,14 +167,12 @@ export default class Sensor extends Component {
         </label>
         <button
           className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
-          onClick={this.handleClear}
-        >
+          onClick={this.handleClear}>
           Clear Image
         </button>
         <button
           className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
-          onClick={this.handleTrain}
-        >
+          onClick={this.handleTrain}>
           Train Network
         </button>
       </div>
@@ -194,14 +192,12 @@ export default class Sensor extends Component {
           <div>
             <button
               className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
-              onClick={this.handleWebcam}
-            >
+              onClick={this.handleWebcam}>
               Webcam Stop
             </button>
             <button
               className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
-              onClick={this.handleCapture}
-            >
+              onClick={this.handleCapture}>
               Capture
             </button>
           </div>
@@ -225,8 +221,7 @@ export default class Sensor extends Component {
           <div>
             <button
               className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
-              onClick={this.handleWebcam}
-            >
+              onClick={this.handleWebcam}>
               Webcam Start
             </button>
           </div>

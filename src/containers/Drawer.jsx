@@ -11,8 +11,7 @@ export default class Drawer extends Component {
         <a
           className="mdl-navigation__link mdl-typography--subhead"
           key={linkKey}
-          href={listDrawer[i].link}
-        >
+          href={listDrawer[i].link}>
           {listDrawer[i].text}
         </a>
       )
