@@ -71,13 +71,11 @@ export default class WebCamPlayer extends Component {
 WebCamPlayer.propTypes = {
   modelId: PropTypes.string,
   canvasWidth: PropTypes.number,
-  canvasHeight: PropTypes.number,
-  serverTick: PropTypes.number
+  canvasHeight: PropTypes.number
 }
 
 WebCamPlayer.defaultProps = {
   modelId: 'WebCamPlayer',
   canvasWidth: 640,
-  canvasHeight: 480,
-  serverTick: 0
+  canvasHeight: 480
 }

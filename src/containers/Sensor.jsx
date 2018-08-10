@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import * as faceapi from 'face-api.js'
+import Webcam from 'react-webcam'
 
 import ImageGallery from '../components/ImageGallery'
 import MdlBusyBar from '../components/MdlBusyBar'
@@ -13,11 +14,15 @@ export default class Sensor extends Component {
     this.state = {
       isLoading: true,
       isBusy: false,
+      isPlaying: false,
       imageFile: [],
       imageWidth: 100,
       imageHeight: 100,
       imageSize: 1000000,
       imageFaceDesc: [],
+      videoWidth: 640,
+      videoHeight: 360,
+      videoBuff: null,
       mtcnnParams: { minFaceSize: 50 }
     }
     // this.fdnet = new faceapi.Mtcnn()
@@ -26,6 +31,7 @@ export default class Sensor extends Component {
     this.handleUpload = this.handleUpload.bind(this)
     this.handleClear = this.handleClear.bind(this)
     this.handleTrain = this.handleTrain.bind(this)
+    this.handleWebcam = this.handleWebcam.bind(this)
     this.faceDesc = []
   }
 
@@ -36,6 +42,10 @@ export default class Sensor extends Component {
   componentDidMount = async () => {
     await this.modelLoad()
     this.setState({ isLoading: false })
+  }
+
+  setWebcamRef = webcam => {
+    this.webcam = webcam
   }
 
   // ================================================================================
@@ -126,6 +136,18 @@ export default class Sensor extends Component {
     this.setState({ isBusy: false, imageFaceDesc: this.faceDesc })
   }
 
+  handleWebcam = () => {
+    if (this.state.isPlaying === true) {
+      this.setState({ isPlaying: false, videoBuff: null })
+    } else {
+      this.setState({ isPlaying: true })
+    }
+  }
+
+  handleCapture = () => {
+    this.setState({ videoBuff: this.webcam.getScreenshot() })
+  }
+
   // ================================================================================
   // React render functions
   // ================================================================================
@@ -159,6 +181,61 @@ export default class Sensor extends Component {
     )
   }
 
+  renderWebcamPlayer = () => {
+    const videoConstraints = {
+      width: 1280,
+      height: 720,
+      facingMode: 'user'
+    }
+
+    if (this.state.isPlaying) {
+      return (
+        <div>
+          <div>
+            <button
+              className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+              onClick={this.handleWebcam}
+            >
+              Webcam Stop
+            </button>
+            <button
+              className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+              onClick={this.handleCapture}
+            >
+              Capture
+            </button>
+          </div>
+          <div className="mdl-card__actions mdl-card--border sensor_borderline" />
+          <div>
+            <Webcam
+              audio={false}
+              width={this.state.videoWidth}
+              height={this.state.videoHeight}
+              ref={this.setWebcamRef}
+              screenshotFormat="image/jpeg"
+              videoConstraints={videoConstraints}
+            />
+          </div>
+          <img src={this.state.videoBuff} alt={''} />
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <div>
+            <button
+              className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+              onClick={this.handleWebcam}
+            >
+              Webcam Start
+            </button>
+          </div>
+          <div className="mdl-card__actions mdl-card--border sensor_borderline" />
+        </div>
+      )
+    }
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -188,7 +265,9 @@ export default class Sensor extends Component {
               modelBorderUp
             />
           </div>
-          <div className="layout-content mdl-color--white mdl-shadow--4dp mdl-color-text--grey-800 mdl-cell mdl-cell--6-col" />
+          <div className="layout-content mdl-color--white mdl-shadow--4dp mdl-color-text--grey-800 mdl-cell mdl-cell--6-col">
+            {this.renderWebcamPlayer()}
+          </div>
         </div>
       )
     }
