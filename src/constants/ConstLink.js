@@ -11,5 +11,6 @@ export const listDrawer = [
   { text: 'React', link: 'https://facebook.github.io/react/' },
   { text: 'Redux', link: 'http://redux.js.org/' },
   { text: 'Material Design Lite', link: 'https://getmdl.io/' },
-  { text: 'FlipMove', link: 'https://github.com/joshwcomeau/react-flip-move' }
+  { text: 'FlipMove', link: 'https://github.com/joshwcomeau/react-flip-move' },
+  { text: 'react-webcam', link: 'https://github.com/mozmorris/react-webcam' }
 ]
