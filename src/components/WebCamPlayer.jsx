@@ -22,6 +22,7 @@ export default class WebCamPlayer extends Component {
   }
 
   render() {
+    const { modelId, canvasWidth, canvasHeight } = this.props
     const videoConstraints = {
       width: 1280,
       height: 720,
@@ -30,7 +31,7 @@ export default class WebCamPlayer extends Component {
 
     if (this.state.isPlaying) {
       return (
-        <div>
+        <div key={modelId}>
           <div>
             <button
               className="imageUploader_Button mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
@@ -43,10 +44,10 @@ export default class WebCamPlayer extends Component {
           <div>
             <Webcam
               audio={false}
-              height={480}
+              width={canvasWidth}
+              height={canvasHeight}
               ref={this.setRef}
               screenshotFormat="image/jpeg"
-              width={640}
               videoConstraints={videoConstraints}
             />
           </div>
@@ -54,7 +55,7 @@ export default class WebCamPlayer extends Component {
       )
     } else {
       return (
-        <div>
+        <div key={modelId}>
           <button
             className="imageUploader_Button mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
             onClick={this.handleControl}
@@ -65,4 +66,18 @@ export default class WebCamPlayer extends Component {
       )
     }
   }
+}
+
+WebCamPlayer.propTypes = {
+  modelId: PropTypes.string,
+  canvasWidth: PropTypes.number,
+  canvasHeight: PropTypes.number,
+  serverTick: PropTypes.number
+}
+
+WebCamPlayer.defaultProps = {
+  modelId: 'WebCamPlayer',
+  canvasWidth: 640,
+  canvasHeight: 480,
+  serverTick: 0
 }
