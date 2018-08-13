@@ -23,6 +23,7 @@ export default class Sensor extends Component {
       videoWidth: 640,
       videoHeight: 360,
       videoBuff: null,
+      processTime: '0',
       mtcnnParams: { minFaceSize: 50 }
     }
     // this.fdnet = new faceapi.Mtcnn()
@@ -43,6 +44,10 @@ export default class Sensor extends Component {
     await this.modelLoad()
     this.setState({ isLoading: false })
   }
+
+  // ================================================================================
+  // Inner functions
+  // ================================================================================
 
   setWebcamRef = webcam => {
     this.webcam = webcam
@@ -95,6 +100,7 @@ export default class Sensor extends Component {
   handleUpload = event => {
     const data = []
     let dataTemp
+    const tstart = performance.now()
 
     for (let i = 0; i < event.target.files.length; i += 1) {
       if (
@@ -112,9 +118,11 @@ export default class Sensor extends Component {
       }
     }
 
+    const tend = performance.now()
     if (data.length > 0) {
       this.setState({
-        imageFile: data
+        imageFile: data,
+        processTime: (tend - tstart).toString() + ' ms'
       })
     } else {
       this.setState({
@@ -130,10 +138,16 @@ export default class Sensor extends Component {
   }
 
   handleTrain = async () => {
+    const tstart = performance.now()
     this.setState({ isBusy: true, imageFaceDesc: [] })
     this.faceDesc = []
     await this.modelTrain()
-    this.setState({ isBusy: false, imageFaceDesc: this.faceDesc })
+    const tend = performance.now()
+    this.setState({
+      isBusy: false,
+      imageFaceDesc: this.faceDesc,
+      processTime: (tend - tstart).toString() + ' ms'
+    })
   }
 
   handleWebcam = () => {
@@ -177,6 +191,30 @@ export default class Sensor extends Component {
         </button>
       </div>
     )
+  }
+
+  renderProceeTime = () => {
+    if (this.state.imageFile.length > 0 && this.state.isBusy === false) {
+      return (
+        <div>
+          <div className="mdl-card__actions mdl-card--border sensor_borderline" />
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input
+              className="mdl-textfield__input"
+              type="text"
+              id="processTime_text"
+              readOnly
+              value={this.state.processTime}
+            />
+            <label className="mdl-textfield__label" htmlFor="processTime_text">
+              Process Time
+            </label>
+          </div>
+        </div>
+      )
+    } else {
+      return null
+    }
   }
 
   renderWebcamPlayer = () => {
@@ -254,6 +292,7 @@ export default class Sensor extends Component {
               imageHeight={this.state.imageHeight}
               renderHidden
             />
+            {this.renderProceeTime()}
             <MdlBusyBar
               modelSwitch={this.state.isBusy}
               modelText={'Processing...'}

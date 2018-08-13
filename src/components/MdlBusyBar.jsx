@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import './MdlBusyBar.css'
 
 export default class MdlBusyBar extends Component {
   componentDidUpdate = () => {
@@ -9,7 +10,7 @@ export default class MdlBusyBar extends Component {
   renderBorder = renderSwitch => {
     if (renderSwitch) {
       return (
-        <div className="mdl-card__actions mdl-card--border imageUploader_border" />
+        <div className="mdl-card__actions mdl-card--border mdlBusyBar_border" />
       )
     }
   }
