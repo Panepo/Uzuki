@@ -63,6 +63,10 @@ export default class Sensor extends Component {
       await faceapi.loadFaceRecognitionModel(
         '/models/face_recognition_model-weights_manifest.json'
       )
+      await faceapi.allFacesMtcnn(
+        document.getElementById('initial_black'),
+        this.state.mtcnnParams
+      )
       resolve()
     })
   }
@@ -122,7 +126,7 @@ export default class Sensor extends Component {
     if (data.length > 0) {
       this.setState({
         imageFile: data,
-        processTime: (tend - tstart).toString() + ' ms'
+        processTime: Math.floor(tend - tstart).toString() + ' ms'
       })
     } else {
       this.setState({
@@ -146,7 +150,7 @@ export default class Sensor extends Component {
     this.setState({
       isBusy: false,
       imageFaceDesc: this.faceDesc,
-      processTime: (tend - tstart).toString() + ' ms'
+      processTime: Math.floor(tend - tstart).toString() + ' ms'
     })
   }
 
@@ -276,6 +280,12 @@ export default class Sensor extends Component {
           <div className="mdl-cell mdl-cell--4-col" />
           <div className="layout-content mdl-color--white mdl-shadow--4dp mdl-color-text--grey-800 mdl-cell mdl-cell--4-col">
             <MdlBusyBar modelText={'Loading...'} />
+            <img
+              className="sensor_initial_black"
+              id="initial_black"
+              src="black.png"
+              alt="initial_black"
+            />
           </div>
         </div>
       )
