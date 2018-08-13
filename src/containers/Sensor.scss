@@ -4,9 +4,18 @@
 
 .sensor_borderline {
   padding-top: 10px;
-  padding-bottom: 10spx;
+  padding-bottom: 10px;
 }
 
 .sensor_initial_black {
   display: none;
+}
+
+.sensor_video_capture {
+  display: none;
+}
+
+.sensor_overlay {
+  z-index: 10;
+  margin-top: -360px;
 }

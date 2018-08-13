@@ -15,6 +15,8 @@ export default class Sensor extends Component {
       isLoading: true,
       isBusy: false,
       isPlaying: false,
+      isTrained: false,
+      isSensing: false,
       imageFile: [],
       imageWidth: 100,
       imageHeight: 100,
@@ -24,6 +26,7 @@ export default class Sensor extends Component {
       videoHeight: 360,
       videoBuff: null,
       processTime: '0',
+      predictTick: 1000,
       mtcnnParams: { minFaceSize: 50 }
     }
     // this.fdnet = new faceapi.Mtcnn()
@@ -33,7 +36,8 @@ export default class Sensor extends Component {
     this.handleClear = this.handleClear.bind(this)
     this.handleTrain = this.handleTrain.bind(this)
     this.handleWebcam = this.handleWebcam.bind(this)
-    this.faceDesc = []
+    this.faceTrained = []
+    this.faceInput = []
   }
 
   // ================================================================================
@@ -63,9 +67,8 @@ export default class Sensor extends Component {
       await faceapi.loadFaceRecognitionModel(
         '/models/face_recognition_model-weights_manifest.json'
       )
-      await faceapi.allFacesMtcnn(
-        document.getElementById('initial_black'),
-        this.state.mtcnnParams
+      await faceapi.computeFaceDescriptor(
+        document.getElementById('initial_black')
       )
       resolve()
     })
@@ -74,12 +77,11 @@ export default class Sensor extends Component {
   modelTrain = () => {
     return new Promise(async resolve => {
       for (let i = 0; i < this.state.imageFile.length; i += 1) {
-        this.faceDesc.push(
-          await faceapi.allFacesMtcnn(
+        this.faceTrained.push(
+          await faceapi.computeFaceDescriptor(
             document.getElementById(
               'ImageGallery_imageGallery_hidden_' + i.toString()
-            ),
-            this.state.mtcnnParams
+            )
           )
         )
       }
@@ -89,12 +91,28 @@ export default class Sensor extends Component {
 
   modelPredict = input => {
     return new Promise(async resolve => {
-      await faceapi.allFacesMtcnn(
+      this.faceInput = (await faceapi.allFacesMtcnn(
         document.getElementById(input),
         this.state.mtcnnParams
-      )
+      )).map(fd => fd.forSize(this.state.videoWidth, this.state.videoHeight))
       resolve()
     })
+  }
+
+  modelGetBestMatch = (faceTrained, faceInput) => {
+    const computeMeanDistance = faceTrained => {
+      return faceapi.round(
+        faceTrained
+          .map(value => faceapi.euclideanDistance(value, faceInput))
+          .reduce((value1, value2) => value1 + value2, 0) /
+          (faceTrained.length || 1)
+      )
+    }
+    return faceTrained
+      .map(value => {
+        return computeMeanDistance(value)
+      })
+      .reduce((best, curr) => (best < curr ? best : curr))
   }
 
   // ================================================================================
@@ -105,6 +123,7 @@ export default class Sensor extends Component {
     const data = []
     let dataTemp
     const tstart = performance.now()
+    clearInterval(this.interval)
 
     for (let i = 0; i < event.target.files.length; i += 1) {
       if (
@@ -126,44 +145,94 @@ export default class Sensor extends Component {
     if (data.length > 0) {
       this.setState({
         imageFile: data,
-        processTime: Math.floor(tend - tstart).toString() + ' ms'
+        processTime: Math.floor(tend - tstart).toString() + ' ms',
+        isSensing: false
       })
     } else {
       this.setState({
-        imageFile: []
+        imageFile: [],
+        imageFaceDesc: [],
+        isTrained: false,
+        isSensing: false
       })
     }
   }
 
   handleClear = () => {
+    clearInterval(this.interval)
     this.setState({
-      imageFile: []
+      imageFile: [],
+      imageFaceDesc: [],
+      isTrained: false,
+      isSensing: false
     })
   }
 
   handleTrain = async () => {
     const tstart = performance.now()
-    this.setState({ isBusy: true, imageFaceDesc: [] })
-    this.faceDesc = []
+    clearInterval(this.interval)
+    this.setState({
+      isBusy: true,
+      imageFaceDesc: [],
+      isTrained: false,
+      isSensing: false
+    })
+    this.faceTrained = []
     await this.modelTrain()
     const tend = performance.now()
     this.setState({
       isBusy: false,
-      imageFaceDesc: this.faceDesc,
+      isTrained: true,
+      imageFaceDesc: this.faceTrained,
       processTime: Math.floor(tend - tstart).toString() + ' ms'
     })
   }
 
   handleWebcam = () => {
-    if (this.state.isPlaying === true) {
-      this.setState({ isPlaying: false, videoBuff: null })
+    if (this.state.isPlaying) {
+      clearInterval(this.interval)
+      this.setState({ isPlaying: false, videoBuff: null, isSensing: false })
     } else {
       this.setState({ isPlaying: true })
     }
   }
 
   handleCapture = () => {
-    this.setState({ videoBuff: this.webcam.getScreenshot() })
+    return new Promise(async resolve => {
+      await this.setState({ videoBuff: this.webcam.getScreenshot() })
+      resolve()
+    })
+  }
+
+  handleSense = () => {
+    if (this.state.isSensing) {
+      clearInterval(this.interval)
+      this.setState({ isSensing: false })
+    } else {
+      this.interval = setInterval(
+        () => this.handleModelPredictTick(),
+        this.state.predictTick
+      )
+      this.setState({ isSensing: true })
+    }
+  }
+
+  handleModelPredictTick = async () => {
+    const tstart = performance.now()
+    const canvas = this.refs.overlayCanvas
+    const ctx = canvas.getContext('2d')
+    ctx.clearRect(0, 0, this.state.videoWidth, this.state.videoHeight)
+    await this.handleCapture()
+    await this.modelPredict('sensor_video_capture_id')
+    this.faceInput.forEach(({ detection, landmarks, descriptor }) => {
+      faceapi.drawDetection('sensor_overlay_id', [detection], {
+        withScore: false
+      })
+    })
+    const tend = performance.now()
+    this.setState({
+      processTime: Math.floor(tend - tstart).toString() + ' ms'
+    })
   }
 
   // ================================================================================
@@ -221,6 +290,77 @@ export default class Sensor extends Component {
     }
   }
 
+  renderWebcamButton = () => {
+    const renderWebcamPower = onoff => {
+      if (onoff) {
+        return (
+          <button
+            className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+            onClick={this.handleWebcam}>
+            Webcam Stop
+          </button>
+        )
+      } else {
+        return (
+          <button
+            className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+            onClick={this.handleWebcam}>
+            Webcam Start
+          </button>
+        )
+      }
+    }
+
+    const renderWebcamCapture = onoff => {
+      if (onoff) {
+        return (
+          <button
+            className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+            onClick={this.handleCapture}>
+            Capture
+          </button>
+        )
+      } else {
+        return null
+      }
+    }
+
+    const renderWebcamSense = (onoff1, onoff2) => {
+      if (onoff1) {
+        if (onoff2) {
+          return (
+            <button
+              className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+              onClick={this.handleSense}>
+              Sensing Stop
+            </button>
+          )
+        } else {
+          return (
+            <button
+              className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+              onClick={this.handleSense}>
+              Sensing Start
+            </button>
+          )
+        }
+      } else {
+        return null
+      }
+    }
+
+    return (
+      <div>
+        {renderWebcamPower(this.state.isPlaying)}
+        {renderWebcamCapture(this.state.isPlaying)}
+        {renderWebcamSense(
+          this.state.isPlaying & this.state.isTrained,
+          this.state.isSensing
+        )}
+      </div>
+    )
+  }
+
   renderWebcamPlayer = () => {
     const videoConstraints = {
       width: 1280,
@@ -231,20 +371,9 @@ export default class Sensor extends Component {
     if (this.state.isPlaying) {
       return (
         <div>
-          <div>
-            <button
-              className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
-              onClick={this.handleWebcam}>
-              Webcam Stop
-            </button>
-            <button
-              className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
-              onClick={this.handleCapture}>
-              Capture
-            </button>
-          </div>
+          <div>{this.renderWebcamButton()}</div>
           <div className="mdl-card__actions mdl-card--border sensor_borderline" />
-          <div>
+          <div className="sensor_webcam">
             <Webcam
               audio={false}
               width={this.state.videoWidth}
@@ -254,19 +383,26 @@ export default class Sensor extends Component {
               videoConstraints={videoConstraints}
             />
           </div>
-          <img src={this.state.videoBuff} alt={''} />
+          <div className="sensor_overlay">
+            <canvas
+              id="sensor_overlay_id"
+              ref="overlayCanvas"
+              width={this.state.videoWidth}
+              height={this.state.videoHeight}
+            />
+          </div>
+          <img
+            className="sensor_video_capture"
+            id="sensor_video_capture_id"
+            src={this.state.videoBuff}
+            alt={''}
+          />
         </div>
       )
     } else {
       return (
         <div>
-          <div>
-            <button
-              className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
-              onClick={this.handleWebcam}>
-              Webcam Start
-            </button>
-          </div>
+          <div>{this.renderWebcamButton()}</div>
           <div className="mdl-card__actions mdl-card--border sensor_borderline" />
         </div>
       )
