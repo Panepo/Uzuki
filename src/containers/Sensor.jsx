@@ -67,9 +67,7 @@ export default class Sensor extends Component {
       await faceapi.loadFaceRecognitionModel(
         '/models/face_recognition_model-weights_manifest.json'
       )
-      await faceapi.computeFaceDescriptor(
-        document.getElementById('initial_black')
-      )
+      await faceapi.allFacesMtcnn(document.getElementById('initial_black'))
       resolve()
     })
   }
@@ -77,13 +75,14 @@ export default class Sensor extends Component {
   modelTrain = () => {
     return new Promise(async resolve => {
       for (let i = 0; i < this.state.imageFile.length; i += 1) {
-        this.faceTrained.push(
-          await faceapi.computeFaceDescriptor(
+        this.faceTrained.push({
+          desc: await faceapi.computeFaceDescriptor(
             document.getElementById(
               'ImageGallery_imageGallery_hidden_' + i.toString()
             )
-          )
-        )
+          ),
+          id: i.toString()
+        })
       }
       resolve()
     })
@@ -100,19 +99,12 @@ export default class Sensor extends Component {
   }
 
   modelGetBestMatch = (faceTrained, faceInput) => {
-    const computeMeanDistance = faceTrained => {
-      return faceapi.round(
-        faceTrained
-          .map(value => faceapi.euclideanDistance(value, faceInput))
-          .reduce((value1, value2) => value1 + value2, 0) /
-          (faceTrained.length || 1)
-      )
-    }
     return faceTrained
-      .map(value => {
-        return computeMeanDistance(value)
-      })
-      .reduce((best, curr) => (best < curr ? best : curr))
+      .map(({ desc, id }) => ({
+        distance: faceapi.euclideanDistance(desc, faceInput),
+        id
+      }))
+      .reduce((best, curr) => (best.distance < curr.distance ? best : curr))
   }
 
   // ================================================================================
@@ -228,6 +220,45 @@ export default class Sensor extends Component {
       faceapi.drawDetection('sensor_overlay_id', [detection], {
         withScore: false
       })
+      faceapi.drawLandmarks(
+        'sensor_overlay_id',
+        landmarks.forSize(this.state.videoWidth, this.state.videoHeight),
+        { lineWidth: 4, color: 'red' }
+      )
+      const bestMatch = this.modelGetBestMatch(
+        this.state.imageFaceDesc,
+        descriptor
+      )
+      const dispText = bestMatch => {
+        if (bestMatch.distance < 0.6) {
+          return (
+            'unknown_' +
+            bestMatch.id +
+            ' ' +
+            Math.floor(bestMatch.distance * 100).toString() +
+            '%'
+          )
+        } else {
+          return (
+            'person_' +
+            bestMatch.id +
+            ' ' +
+            Math.floor(bestMatch.distance * 100).toString() +
+            '%'
+          )
+        }
+      }
+      const { x, y, height: boxHeight } = detection.getBox()
+      faceapi.drawText(
+        ctx,
+        x,
+        y + boxHeight,
+        dispText(bestMatch),
+        Object.assign(faceapi.getDefaultDrawOptions(), {
+          color: 'red',
+          fontSize: 16
+        })
+      )
     })
     const tend = performance.now()
     this.setState({
