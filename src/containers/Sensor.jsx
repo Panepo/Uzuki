@@ -25,6 +25,11 @@ export default class Sensor extends Component {
       videoWidth: 640,
       videoHeight: 360,
       videoBuff: null,
+      videoConstraints: {
+        width: 1280,
+        height: 720,
+        facingMode: 'user'
+      },
       processTime: '0',
       predictTick: 1000,
       mtcnnParams: { minFaceSize: 50 }
@@ -271,6 +276,30 @@ export default class Sensor extends Component {
   // ================================================================================
 
   renderButton = () => {
+    const renderClear = () => {
+      if (this.state.imageFaceDesc.length > 0) {
+        return (
+          <button
+            className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+            onClick={this.handleClear}>
+            Clear Image
+          </button>
+        )
+      }
+    }
+
+    const renderTrain = () => {
+      if (this.state.imageFaceDesc.length > 0) {
+        return (
+          <button
+            className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+            onClick={this.handleTrain}>
+            Train Network
+          </button>
+        )
+      }
+    }
+
     return (
       <div>
         <label className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary">
@@ -283,16 +312,8 @@ export default class Sensor extends Component {
             multiple
           />
         </label>
-        <button
-          className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
-          onClick={this.handleClear}>
-          Clear Image
-        </button>
-        <button
-          className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
-          onClick={this.handleTrain}>
-          Train Network
-        </button>
+        {renderClear()}
+        {renderTrain()}
       </div>
     )
   }
@@ -393,12 +414,6 @@ export default class Sensor extends Component {
   }
 
   renderWebcamPlayer = () => {
-    const videoConstraints = {
-      width: 1280,
-      height: 720,
-      facingMode: 'user'
-    }
-
     if (this.state.isPlaying) {
       return (
         <div>
@@ -411,7 +426,7 @@ export default class Sensor extends Component {
               height={this.state.videoHeight}
               ref={this.setWebcamRef}
               screenshotFormat="image/jpeg"
-              videoConstraints={videoConstraints}
+              videoConstraints={this.state.videoConstraints}
             />
           </div>
           <div className="sensor_overlay">
