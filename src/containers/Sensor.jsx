@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
-
+import PropTypes from 'prop-types'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { iframeSwitch } from '../actions'
 import * as faceapi from 'face-api.js'
 import Webcam from 'react-webcam'
-
 import ImageGallery from '../components/ImageGallery'
 import MdlBusyBar from '../components/MdlBusyBar'
-
 import './Sensor.css'
 
-export default class Sensor extends Component {
+class Sensor extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -34,13 +35,11 @@ export default class Sensor extends Component {
       predictTick: 1000,
       mtcnnParams: { minFaceSize: 50 }
     }
-    // this.fdnet = new faceapi.Mtcnn()
-    // this.flnet = new faceapi.FaceLandmarkNet()
-    // this.frnet = new faceapi.FaceRecognitionNet()
     this.handleUpload = this.handleUpload.bind(this)
     this.handleClear = this.handleClear.bind(this)
     this.handleTrain = this.handleTrain.bind(this)
     this.handleWebcam = this.handleWebcam.bind(this)
+    this.handleIframe = this.handleIframe.bind(this)
     this.faceTrained = []
     this.faceInput = []
   }
@@ -271,6 +270,11 @@ export default class Sensor extends Component {
     })
   }
 
+  handleIframe = () => {
+    const { iframeSwitch } = this.props
+    iframeSwitch(true)
+  }
+
   // ================================================================================
   // React render functions
   // ================================================================================
@@ -300,6 +304,16 @@ export default class Sensor extends Component {
       }
     }
 
+    const renderIframe = () => {
+      return (
+        <button
+          className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+          onClick={this.handleIframe}>
+          Iframe
+        </button>
+      )
+    }
+
     return (
       <div>
         <label className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary">
@@ -314,6 +328,7 @@ export default class Sensor extends Component {
         </label>
         {renderClear()}
         {renderTrain()}
+        {renderIframe()}
       </div>
     )
   }
@@ -499,3 +514,22 @@ export default class Sensor extends Component {
     }
   }
 }
+
+Sensor.propTypes = {
+  iframeSwitch: PropTypes.func.isRequired
+}
+
+const mapStateToProps = function mapStateToProps(state) {
+  return {}
+}
+
+const mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    iframeSwitch: bindActionCreators(iframeSwitch, dispatch)
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Sensor)

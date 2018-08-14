@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import IframeCover from './IframeCover'
 import { listLink } from '../constants/ConstLink'
 import './Header.css'
 
@@ -23,6 +24,7 @@ export default class Header extends Component {
   render() {
     return (
       <header className="layout-header mdl-layout__header mdl-layout__header--scroll mdl-color--grey-100 mdl-color-text--grey-800">
+        <IframeCover />
         <div className="mdl-layout__header-row mdl-shadow--4dp">
           <span className="mdl-layout-title mdl-typography--title">
             <b>Uzuki</b>

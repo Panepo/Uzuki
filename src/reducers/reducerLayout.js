@@ -1,15 +1,15 @@
-import { IMAGE_UPLOAD } from '../constants/ConstActionTypes'
+import { IFRMAE_SWITCH } from '../constants/ConstActionTypes'
 
 const initialState = {
-  contentDisplay: false
+  iframeDisplay: false
 }
 
 const reducerLayout = (state = initialState, action) => {
   switch (action.type) {
-    case IMAGE_UPLOAD:
+    case IFRMAE_SWITCH:
       return {
         ...state,
-        contentDisplay: action.bool
+        iframeDisplay: action.onoff
       }
     default:
       return state
