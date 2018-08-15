@@ -35,7 +35,7 @@ class Sensor extends Component {
       processTime: '0',
       predictTick: 1000,
       mtcnnParams: { minFaceSize: 50 },
-      recogMinConf: 0.5
+      recogMinConf: 0.4
     }
     this.handleUpload = this.handleUpload.bind(this)
     this.handleClear = this.handleClear.bind(this)
@@ -88,7 +88,7 @@ class Sensor extends Component {
               'ImageGallery_imageGallery_hidden_' + i.toString()
             )
           ),
-          id: i.toString()
+          id: (i + 1).toString()
         })
       }
       resolve()
@@ -292,7 +292,15 @@ class Sensor extends Component {
   }
 
   handleAlarm = () => {
-    console.log('Boss is approaching fast!!')
+    const { iframeSwitch } = this.props
+    iframeSwitch(true)
+    clearInterval(this.interval)
+    this.setState({
+      isPlaying: false,
+      videoBuff: null,
+      isSensing: false,
+      isAlarming: false
+    })
   }
 
   // ================================================================================
