@@ -1,9 +1,12 @@
 .imageUploader {
-  align-content: center; }
+  align-content: center;
+}
 
 .imageUploader_none {
-  display: none; }
+  display: none;
+}
 
 .imageUploader_border {
   padding-top: 10px;
-  padding-bottom: 10spx; }
+  padding-bottom: 10spx;
+}

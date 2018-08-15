@@ -2,23 +2,28 @@
   margin-top: -55vh;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
-  flex-shrink: 0; }
+  flex-shrink: 0;
+}
 
 .layout-container {
   max-width: 1600px;
   width: calc(100% - 16px);
-  margin: 0 auto; }
+  margin: 0 auto;
+}
 
 .layout-content {
   border-radius: 2px;
   padding: 80px 56px;
-  margin-bottom: 80px; }
+  margin-bottom: 80px;
+}
 
 .layout-layout.is-small-screen .layout-content {
-  padding: 40px 28px; }
+  padding: 40px 28px;
+}
 
 .layout-content h3 {
-  margin-top: 48px; }
+  margin-top: 48px;
+}
 
 #view-source {
   position: fixed;
@@ -27,4 +32,5 @@
   bottom: 0;
   margin-right: 40px;
   margin-bottom: 40px;
-  z-index: 900; }
+  z-index: 900;
+}
