@@ -13,9 +13,7 @@
   /* Standard syntax */
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
-  flex-shrink: 0;
-}
+  flex-shrink: 0; }
 
 .layout-app {
-  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif !important;
-}
+  font-family: 'Roboto','Helvetica','Arial',sans-serif !important; }
