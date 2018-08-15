@@ -29,6 +29,7 @@ class IframeCover extends Component {
           </button>
           <div className="iframe_content mdl-color--black">
             <iframe
+              title="nonsense"
               className="iframe_nonsense"
               src="https://svenstaro.github.io/genact/"
             />

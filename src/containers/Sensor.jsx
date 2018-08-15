@@ -18,6 +18,7 @@ class Sensor extends Component {
       isPlaying: false,
       isTrained: false,
       isSensing: false,
+      isAlarming: false,
       imageFile: [],
       imageWidth: 100,
       imageHeight: 100,
@@ -33,13 +34,15 @@ class Sensor extends Component {
       },
       processTime: '0',
       predictTick: 1000,
-      mtcnnParams: { minFaceSize: 50 }
+      mtcnnParams: { minFaceSize: 50 },
+      recogMinConf: 0.5
     }
     this.handleUpload = this.handleUpload.bind(this)
     this.handleClear = this.handleClear.bind(this)
     this.handleTrain = this.handleTrain.bind(this)
     this.handleWebcam = this.handleWebcam.bind(this)
     this.handleIframe = this.handleIframe.bind(this)
+    this.handleAlarmControl = this.handleAlarmControl.bind(this)
     this.faceTrained = []
     this.faceInput = []
   }
@@ -187,7 +190,12 @@ class Sensor extends Component {
   handleWebcam = () => {
     if (this.state.isPlaying) {
       clearInterval(this.interval)
-      this.setState({ isPlaying: false, videoBuff: null, isSensing: false })
+      this.setState({
+        isPlaying: false,
+        videoBuff: null,
+        isSensing: false,
+        isAlarming: false
+      })
     } else {
       this.setState({ isPlaying: true })
     }
@@ -203,7 +211,7 @@ class Sensor extends Component {
   handleSense = () => {
     if (this.state.isSensing) {
       clearInterval(this.interval)
-      this.setState({ isSensing: false })
+      this.setState({ isSensing: false, isAlarming: false })
     } else {
       this.interval = setInterval(
         () => this.handleModelPredictTick(),
@@ -218,6 +226,7 @@ class Sensor extends Component {
     const canvas = this.refs.overlayCanvas
     const ctx = canvas.getContext('2d')
     ctx.clearRect(0, 0, this.state.videoWidth, this.state.videoHeight)
+    let alarm = false
     await this.handleCapture()
     await this.modelPredict('sensor_video_capture_id')
     this.faceInput.forEach(({ detection, landmarks, descriptor }) => {
@@ -234,15 +243,10 @@ class Sensor extends Component {
         descriptor
       )
       const dispText = bestMatch => {
-        if (bestMatch.distance < 0.6) {
-          return (
-            'unknown_' +
-            bestMatch.id +
-            ' ' +
-            Math.floor(bestMatch.distance * 100).toString() +
-            '%'
-          )
+        if (bestMatch.distance < this.state.recogMinConf) {
+          return 'unknown'
         } else {
+          alarm = true
           return (
             'person_' +
             bestMatch.id +
@@ -268,11 +272,27 @@ class Sensor extends Component {
     this.setState({
       processTime: Math.floor(tend - tstart).toString() + ' ms'
     })
+
+    if (this.state.isAlarming && alarm) {
+      this.handleAlarm()
+    }
   }
 
   handleIframe = () => {
     const { iframeSwitch } = this.props
     iframeSwitch(true)
+  }
+
+  handleAlarmControl = () => {
+    if (this.state.isAlarming) {
+      this.setState({ isAlarming: false })
+    } else {
+      this.setState({ isAlarming: true })
+    }
+  }
+
+  handleAlarm = () => {
+    console.log('Boss is approaching fast!!')
   }
 
   // ================================================================================
@@ -281,7 +301,7 @@ class Sensor extends Component {
 
   renderButton = () => {
     const renderClear = () => {
-      if (this.state.imageFaceDesc.length > 0) {
+      if (this.state.imageFile.length > 0) {
         return (
           <button
             className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
@@ -293,7 +313,7 @@ class Sensor extends Component {
     }
 
     const renderTrain = () => {
-      if (this.state.imageFaceDesc.length > 0) {
+      if (this.state.imageFile.length > 0) {
         return (
           <button
             className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
@@ -304,7 +324,7 @@ class Sensor extends Component {
       }
     }
 
-    const renderIframe = () => {
+    /* const renderIframe = () => {
       return (
         <button
           className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
@@ -312,7 +332,7 @@ class Sensor extends Component {
           Iframe
         </button>
       )
-    }
+    } */
 
     return (
       <div>
@@ -328,7 +348,6 @@ class Sensor extends Component {
         </label>
         {renderClear()}
         {renderTrain()}
-        {renderIframe()}
       </div>
     )
   }
@@ -378,7 +397,7 @@ class Sensor extends Component {
       }
     }
 
-    const renderWebcamCapture = onoff => {
+    /* const renderWebcamCapture = onoff => {
       if (onoff) {
         return (
           <button
@@ -390,7 +409,7 @@ class Sensor extends Component {
       } else {
         return null
       }
-    }
+    } */
 
     const renderWebcamSense = (onoff1, onoff2) => {
       if (onoff1) {
@@ -416,13 +435,40 @@ class Sensor extends Component {
       }
     }
 
+    const renderWebcamAlarm = (onoff1, onoff2) => {
+      if (onoff1) {
+        if (onoff2) {
+          return (
+            <button
+              className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+              onClick={this.handleAlarmControl}>
+              Alarming Stop
+            </button>
+          )
+        } else {
+          return (
+            <button
+              className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+              onClick={this.handleAlarmControl}>
+              Alarming Start
+            </button>
+          )
+        }
+      } else {
+        return null
+      }
+    }
+
     return (
       <div>
         {renderWebcamPower(this.state.isPlaying)}
-        {renderWebcamCapture(this.state.isPlaying)}
         {renderWebcamSense(
           this.state.isPlaying & this.state.isTrained,
           this.state.isSensing
+        )}
+        {renderWebcamAlarm(
+          this.state.isPlaying & this.state.isTrained & this.state.isSensing,
+          this.state.isAlarming
         )}
       </div>
     )
