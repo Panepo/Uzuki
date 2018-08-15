@@ -7,6 +7,7 @@ import * as faceapi from 'face-api.js'
 import Webcam from 'react-webcam'
 import ImageGallery from '../components/ImageGallery'
 import MdlBusyBar from '../components/MdlBusyBar'
+import * as config from './Sensor.config'
 import './Sensor.css'
 
 class Sensor extends Component {
@@ -57,7 +58,7 @@ class Sensor extends Component {
   }
 
   // ================================================================================
-  // Inner functions
+  // HTML functions
   // ================================================================================
 
   setWebcamRef = webcam => {
@@ -70,10 +71,8 @@ class Sensor extends Component {
 
   modelLoad = () => {
     return new Promise(async resolve => {
-      await faceapi.loadMtcnnModel('/models/mtcnn_model-weights_manifest.json')
-      await faceapi.loadFaceRecognitionModel(
-        '/models/face_recognition_model-weights_manifest.json'
-      )
+      await faceapi.loadMtcnnModel(config.pathMtcnn)
+      await faceapi.loadFaceRecognitionModel(config.pathFaceReg)
       await faceapi.allFacesMtcnn(document.getElementById('initial_black'))
       resolve()
     })
@@ -534,7 +533,7 @@ class Sensor extends Component {
             <img
               className="sensor_initial_black"
               id="initial_black"
-              src="black.png"
+              src="./black.png"
               alt="initial_black"
             />
           </div>
