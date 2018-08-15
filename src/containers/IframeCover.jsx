@@ -27,7 +27,12 @@ class IframeCover extends Component {
             onClick={this.handleSwitch}>
             <div className="material-icons">clear</div>
           </button>
-          <div className="iframe_content mdl-color--white mdl-color-text--grey-800" />
+          <div className="iframe_content mdl-color--black">
+            <iframe
+              className="iframe_nonsense"
+              src="https://svenstaro.github.io/genact/"
+            />
+          </div>
         </div>
       )
     }

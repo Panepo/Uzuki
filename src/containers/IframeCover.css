@@ -11,17 +11,18 @@
   background-color: rgba(0, 0, 0, 0.8); /* Black w/ opacity */
 }
 
-.iframe-content {
+.iframe_content {
   margin: auto;
   display: block;
-  width: 80%;
+  width: 90%;
+  height: 80%;
   -webkit-animation-name: zoom;
   -webkit-animation-duration: 0.6s;
   animation-name: zoom;
   animation-duration: 0.6s;
   border-radius: 2px;
-  padding: 80px 56px;
-  margin-bottom: 80px;
+  padding: 50px 50px;
+  margin-bottom: 50px;
 }
 
 @-webkit-keyframes zoom {
@@ -61,7 +62,11 @@
 
 /* 100% Image Width on Smaller Screens */
 @media only screen and (max-width: 1400px) {
-  .iframe-content {
+  .iframe_content {
     width: 100%;
   }
+}
+
+.iframe_nonsense {
+  height: 100%;
 }
