@@ -23,4 +23,4 @@ script:
   - git add -A .
   - MESSAGE=`date +\ %Y-%m-%d\ %H:%M:%S`
   - git commit -m "Travis CI auto deploy:$MESSAGE"
-  - git push --quiet
+  - git push --quiet --force
