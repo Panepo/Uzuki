@@ -17,4 +17,9 @@ script:
   - git config --global user.name "$GIT_NAME"
   - git config --global user.email "$GIT_EMAIL"
   - git config --global push.default simple
-  - yarn deploy
+  - yarn build
+  - cd build
+  - git add -A .
+  - MESSAGE=`date +\ %Y-%m-%d\ %H:%M:%S`
+  - git commit -m "Travis CI auto deploy:$MESSAGE"
+  - git push --quiet
