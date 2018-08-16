@@ -3,8 +3,7 @@
 }
 
 .sensor_borderline {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  margin-top: 10px;
 }
 
 .sensor_initial_black {
@@ -18,4 +17,8 @@
 .sensor_overlay {
   z-index: 10;
   margin-top: -360px;
+}
+
+.sensor_inputbox {
+  padding: 5px;
 }

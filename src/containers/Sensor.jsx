@@ -34,9 +34,9 @@ class Sensor extends Component {
         facingMode: 'user'
       },
       processTime: '0',
-      predictTick: 1000,
+      predictTick: 500,
       mtcnnParams: { minFaceSize: 50 },
-      recogMinConf: 0.4
+      recogMinConf: 0.8
     }
     this.handleUpload = this.handleUpload.bind(this)
     this.handleClear = this.handleClear.bind(this)
@@ -44,6 +44,8 @@ class Sensor extends Component {
     this.handleWebcam = this.handleWebcam.bind(this)
     this.handleIframe = this.handleIframe.bind(this)
     this.handleAlarmControl = this.handleAlarmControl.bind(this)
+    this.handleConf = this.handleConf.bind(this)
+    this.handleTick = this.handleTick.bind(this)
     this.faceTrained = []
     this.faceInput = []
   }
@@ -300,6 +302,36 @@ class Sensor extends Component {
       isSensing: false,
       isAlarming: false
     })
+    alert('A boss is approaching fast!!')
+  }
+
+  handleConf = event => {
+    const checkConf = inputConf => {
+      if (inputConf > 0.99) {
+        return 0.99
+      } else if (inputConf < 0.01) {
+        return 0.01
+      } else {
+        return inputConf
+      }
+    }
+    this.setState({ recogMinConf: checkConf(event.target.value) })
+  }
+
+  handleTick = event => {
+    const checkTick = inputTick => {
+      if (inputTick < 300) {
+        return 300
+      } else {
+        return inputTick
+      }
+    }
+    this.setState({ predictTick: checkTick(event.target.value) })
+    clearInterval(this.interval)
+    this.interval = setInterval(
+      () => this.handleModelPredictTick(),
+      this.state.predictTick
+    )
   }
 
   // ================================================================================
@@ -481,12 +513,49 @@ class Sensor extends Component {
     )
   }
 
+  renderWebcamControl = () => {
+    if (this.state.isSensing) {
+      return (
+        <div>
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input
+              className="mdl-textfield__input"
+              type="text"
+              pattern="-?[0-9]*(\.[0-9]+)?"
+              id="buttonConf"
+              value={this.state.recogMinConf}
+              onChange={this.handleConf}
+            />
+            <label className="mdl-textfield__label" htmlFor="buttonConf">
+              Minimum Confidence
+            </label>
+            <span className="mdl-textfield__error">Input is not a number!</span>
+          </div>
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input
+              className="mdl-textfield__input"
+              type="text"
+              pattern="-?[0-9]*(\.[0-9]+)?"
+              id="buttonTick"
+              value={this.state.predictTick}
+              onChange={this.handleTick}
+            />
+            <label className="mdl-textfield__label" htmlFor="buttonTick">
+              Perdiction Period(ms)
+            </label>
+            <span className="mdl-textfield__error">Input is not a number!</span>
+          </div>
+        </div>
+      )
+    }
+  }
+
   renderWebcamPlayer = () => {
     if (this.state.isPlaying) {
       return (
         <div>
-          <div>{this.renderWebcamButton()}</div>
-          <div className="mdl-card__actions mdl-card--border sensor_borderline" />
+          {this.renderWebcamButton()}
+          <div className="mdl-card__actions mdl-card--border" />
           <div className="sensor_webcam">
             <Webcam
               audio={false}
@@ -505,6 +574,8 @@ class Sensor extends Component {
               height={this.state.videoHeight}
             />
           </div>
+          <div className="mdl-card__actions mdl-card--border sensor_borderline" />
+          {this.renderWebcamControl()}
           <img
             className="sensor_video_capture"
             id="sensor_video_capture_id"
@@ -517,7 +588,7 @@ class Sensor extends Component {
       return (
         <div>
           <div>{this.renderWebcamButton()}</div>
-          <div className="mdl-card__actions mdl-card--border sensor_borderline" />
+          <div className="mdl-card__actions mdl-card--border" />
         </div>
       )
     }
@@ -545,7 +616,7 @@ class Sensor extends Component {
           <div className="mdl-cell mdl-cell--1-col mdl-cell--hide-tablet mdl-cell--hide-phone" />
           <div className="layout-content mdl-color--white mdl-shadow--4dp mdl-color-text--grey-800 mdl-cell mdl-cell--4-col">
             {this.renderButton()}
-            <div className="mdl-card__actions mdl-card--border sensor_borderline" />
+            <div className="mdl-card__actions mdl-card--border" />
             <ImageGallery
               imageSrc={this.state.imageFile}
               imageWidth={this.state.imageWidth}
