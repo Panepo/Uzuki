@@ -1,33 +1,26 @@
 language: node_js
-
 node_js:
-  - "8.11.3"
-
-env:
-  global:
-    secure: AxlzmKZxlO/DgV4HyDcIVEtGbed4hmfqsrJg9a2TcpgPCqy6I+kUgqmSL8nc7aDkK9703jxx6eIy8ZK1oDaV1pBkQONkGSrhVSjTqdHJb3xUKkOG/60l51vY6yV100Pm4wsSSTNFegbJQX1IPuWMIrtzd3Yit8QoofzUgh7X3kJlg8FRsp0hrzYCf4WAT75ck1m4eMbNuKQki+iwlzTKzzsZQ9DRRxgzY9DLsUG+yPhvNs8Dur7v/i06G3cTcKG8xPTkMiVIyzkRw/elP14D7Ax/kTMoG98c08qK02BMb/SzWUhB7cjU8/2T2eHYktIAHssuY7VrXs4sNSK2icUKyXIhHZk6iowmLI1a1DVrjEkVFnZeZbpDJp0tJN/89OtlNGWhTnuTnPtdgL5XucDa9cUf+nYKRM+KImmAJvvq4xv+ludEx+9WVQ46xvFol2ZJyzyceUSJesIyxwUwjhz1fJHg9Km6D3wkC3xAI9n76vvM9Z3T8eTZ5Fu4ddgT9UIjojOdlX/E57M/V4A2Fkx0kXd5t/1b4HZzcNxYkHkcusvw8voIbdvwFb0qzDLzKjyZYiliROTilgdcy+oOXD+jbHwx1+ty7Wg3QpeKKTVtSacLG1TKm0pijxorvpUtEpKZzTw0v2qOwN0e0PVThTIRUG8Mjvnw2NoQI9+2l1oKL3o=
-
+- 8.11.3
 before_install:
-  - export TZ=Asia/Taipei
-
+- export TZ=Asia/Taipei
 install:
-  - yarn
-
+- yarn
 script:
-  - git config --global user.name "$GIT_NAME"
-  - git config --global user.email "$GIT_EMAIL"
-  - git config --global push.default simple
-  - yarn build
-  - cd build
-  - git checkout master
-  - git add -A .
-  - MESSAGE=`date +\ %Y-%m-%d\ %H:%M:%S`
-  - git commit -m "Travis CI auto deploy:$MESSAGE"
-  - git push --quiet
-
+- git config --global user.name "$GIT_NAME"
+- git config --global user.email "$GIT_EMAIL"
+- git config --global push.default simple
+- yarn build
+- cd build
+- git checkout master
+- git add -A .
+- MESSAGE=`date +\ %Y-%m-%d\ %H:%M:%S`
+- git commit -m "Travis CI auto deploy:$MESSAGE"
+- git push --quiet
 branches:
   only:
-    - master
-
+  - master
 notifications:
   email: false
+env:
+  global:
+    secure: P4Zolgz0ScxX+PZWIVNyP2yKH5NMEE9zSljLg4YuZWOOze6dVnpSsBXVyU60D7pLoOzH5D/uU8SoDwHevOO3TQ+Bl2JB39w1jU56QE13s04F0JJPuqr3mSusvuqf40o2N+Sy9iE2+ryUd2+qAJGhydDQLTdSI2z9rOfkLTH1TumflZILHlIK9EJaQFz81WOeamzgGWi+PfYxrxXRkl/Gt3qlh49Z0fbnI4s8yG0w/ObQU7UcVualGvlW/kaVE8E96nR0vyf2D9poWo1eaBaFdLiIq5ZRfqDrVOOaOOCU2cov9n294xD4V6bvSIhPcMQX5kRHdXD5H+6eW5ufXZYUzuODHAIZXVuhcJ/4M7H5bdevpHJi0lGovVjEUNoPWPzWogtiTrQdaMBOgKoqOvChvLoqp2DqTf4DF6izlZhsP0s30BISS8DXKcY6XKQ2V2wqaEfidl14EXlCxkI3r+YI6IwBbUXo2iU1dLacFv3qOY3IZw+tPdHXpLdaD/XB2QgIl3AnEeTk0BS5mpdtJv1NeF+3TO7w6hYEutSuvctWCAOT6+72AkXgSPUbb5yLnG83oQX4ADlr0kMo/zbigetDWruoez3SRHJfDrwGYtfGl9ZQe1+koJwaI0G5k5GruOcuIrb/oVSeS4H8PauutosFCjfY281it2qRfEx2tsWtPVw=
