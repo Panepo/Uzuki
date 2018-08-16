@@ -19,7 +19,15 @@ script:
   - git config --global push.default simple
   - yarn build
   - cd build
+  - git checkout master
   - git add -A .
   - MESSAGE=`date +\ %Y-%m-%d\ %H:%M:%S`
   - git commit -m "Travis CI auto deploy:$MESSAGE"
   - git push --quiet
+
+branches:
+  only:
+    - master
+
+notifications:
+  email: false
