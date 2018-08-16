@@ -643,11 +643,11 @@ Sensor.propTypes = {
   iframeSwitch: PropTypes.func.isRequired
 }
 
-const mapStateToProps = function mapStateToProps(state) {
+const mapStateToProps = state => {
   return {}
 }
 
-const mapDispatchToProps = function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = dispatch => {
   return {
     iframeSwitch: bindActionCreators(iframeSwitch, dispatch)
   }

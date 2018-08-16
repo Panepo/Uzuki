@@ -4,20 +4,19 @@ import { listLink } from '../constants/ConstLink'
 import './Header.css'
 
 export default class Header extends Component {
-  generateLink() {
+  generateLink = () => {
     const linkOut = []
-    for (let i = 0; i < listLink.length; i += 1) {
-      let linkKey = 'header-link' + i.toString()
+    listLink.forEach((data, i) => {
       let linkTemp = (
         <a
           className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
-          key={linkKey}
-          href={listLink[i].link}>
-          {listLink[i].text}
+          key={'header-link' + i.toString()}
+          href={data.link}>
+          {data.text}
         </a>
       )
       linkOut.push(linkTemp)
-    }
+    })
     return linkOut
   }
 
