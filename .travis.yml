@@ -6,17 +6,16 @@ before_install:
 install:
 - yarn
 script:
-- git config --global user.name "$GIT_NAME"
-- git config --global user.email "$GIT_EMAIL"
-- git config --global push.default simple
 - git clone --depth 1 --branch gh-pages https://$GH_TOKEN@github.com/Panepo/Uzuki build
 - yarn build
-- cd build
-- git checkout master
-- git add -A .
-- MESSAGE=`date +\ %Y-%m-%d\ %H:%M:%S`
-- git commit -m "Travis CI auto deploy:$MESSAGE"
-- git push --quiet
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  keep-history: true
+  local-dir: build
+  on:
+    branch: master
 branches:
   only:
   - master
