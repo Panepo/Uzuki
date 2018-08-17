@@ -3,10 +3,9 @@ import { listDrawer } from '../constants/ConstLink'
 import './Drawer.css'
 
 export default class Drawer extends Component {
-  generateLink = () => {
-    const linkOut = []
-    listDrawer.forEach((data, i) => {
-      let linkTemp = (
+  renderLink = () => {
+    return listDrawer.reduce((output, data, i) => {
+      output.push(
         <a
           className="mdl-navigation__link mdl-typography--subhead"
           key={'drawer-link' + i.toString()}
@@ -14,10 +13,8 @@ export default class Drawer extends Component {
           {data.text}
         </a>
       )
-      linkOut.push(linkTemp)
-    })
-
-    return linkOut
+      return output
+    }, [])
   }
 
   render() {
@@ -26,7 +23,7 @@ export default class Drawer extends Component {
         <span className="mdl-layout-title mdl-typography--subhead">
           Reference
         </span>
-        <nav className="mdl-navigation">{this.generateLink()}</nav>
+        <nav className="mdl-navigation">{this.renderLink()}</nav>
       </div>
     )
   }

@@ -4,10 +4,9 @@ import { listLink } from '../constants/ConstLink'
 import './Header.css'
 
 export default class Header extends Component {
-  generateLink = () => {
-    const linkOut = []
-    listLink.forEach((data, i) => {
-      let linkTemp = (
+  renderLink = () => {
+    return listLink.reduce((output, data, i) => {
+      output.push(
         <a
           className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
           key={'header-link' + i.toString()}
@@ -15,9 +14,8 @@ export default class Header extends Component {
           {data.text}
         </a>
       )
-      linkOut.push(linkTemp)
-    })
-    return linkOut
+      return output
+    }, [])
   }
 
   render() {
@@ -29,7 +27,7 @@ export default class Header extends Component {
             <b>Uzuki</b>
           </span>
           <div className="mdl-layout-spacer" />
-          <nav className="mdl-navigation">{this.generateLink()}</nav>
+          <nav className="mdl-navigation">{this.renderLink()}</nav>
         </div>
       </header>
     )

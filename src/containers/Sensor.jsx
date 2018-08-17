@@ -121,11 +121,11 @@ class Sensor extends Component {
 
   handleUpload = event => {
     const data = []
-    let dataTemp
     const tstart = performance.now()
     clearInterval(this.interval)
 
     for (let i = 0; i < event.target.files.length; i += 1) {
+      let dataTemp
       if (
         event.target.files[i] != null &&
         event.target.files[i].size <= this.state.imageSize
@@ -363,16 +363,6 @@ class Sensor extends Component {
       }
     }
 
-    /* const renderIframe = () => {
-      return (
-        <button
-          className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
-          onClick={this.handleIframe}>
-          Iframe
-        </button>
-      )
-    } */
-
     return (
       <div>
         <label className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary">
@@ -435,20 +425,6 @@ class Sensor extends Component {
         )
       }
     }
-
-    /* const renderWebcamCapture = onoff => {
-      if (onoff) {
-        return (
-          <button
-            className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
-            onClick={this.handleCapture}>
-            Capture
-          </button>
-        )
-      } else {
-        return null
-      }
-    } */
 
     const renderWebcamSense = (onoff1, onoff2) => {
       if (onoff1) {
