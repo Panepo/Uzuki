@@ -1,7 +1,7 @@
 {
   "name": "uzuki",
   "version": "1.0.0",
-  "description": "Image super-resolution using deep convolutional neural network (CNN)",
+  "description": "Boss sensor javascript version. Popup nonsense activity generator when boss is approaching with your browser and webcam.",
   "private": true,
   "author": "Panepo <panepo@github.io>",
   "homepage": "https://panepo.github.io/Uzuki",
