@@ -35,8 +35,8 @@ class Sensor extends Component {
       },
       processTime: '0',
       predictTick: 500,
-      mtcnnParams: { minFaceSize: 50 },
-      recogMinConf: 0.8
+      mtcnnParams: { minFaceSize: 200 },
+      recogMinConf: 0.5
     }
     this.handleUpload = this.handleUpload.bind(this)
     this.handleClear = this.handleClear.bind(this)
@@ -244,7 +244,7 @@ class Sensor extends Component {
         descriptor
       )
       const dispText = bestMatch => {
-        if (bestMatch.distance < this.state.recogMinConf) {
+        if (bestMatch.distance > this.state.recogMinConf) {
           return 'unknown'
         } else {
           alarm = true
@@ -252,7 +252,7 @@ class Sensor extends Component {
             'person_' +
             bestMatch.id +
             ' ' +
-            Math.floor(bestMatch.distance * 100).toString() +
+            Math.floor(100 - bestMatch.distance * 100).toString() +
             '%'
           )
         }
@@ -315,7 +315,7 @@ class Sensor extends Component {
         return inputConf
       }
     }
-    this.setState({ recogMinConf: checkConf(event.target.value) })
+    this.setState({ recogMinConf: 1 - checkConf(event.target.value) })
   }
 
   handleTick = event => {
@@ -410,7 +410,7 @@ class Sensor extends Component {
       if (onoff) {
         return (
           <button
-            className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+            className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"
             onClick={this.handleWebcam}>
             Webcam Stop
           </button>
@@ -431,7 +431,7 @@ class Sensor extends Component {
         if (onoff2) {
           return (
             <button
-              className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+              className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"
               onClick={this.handleSense}>
               Sensing Stop
             </button>
@@ -455,7 +455,7 @@ class Sensor extends Component {
         if (onoff2) {
           return (
             <button
-              className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary"
+              className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"
               onClick={this.handleAlarmControl}>
               Alarming Stop
             </button>
@@ -499,11 +499,11 @@ class Sensor extends Component {
               type="text"
               pattern="-?[0-9]*(\.[0-9]+)?"
               id="buttonConf"
-              value={this.state.recogMinConf}
+              value={1 - this.state.recogMinConf}
               onChange={this.handleConf}
             />
             <label className="mdl-textfield__label" htmlFor="buttonConf">
-              Minimum Confidence
+              Confidence Threshold
             </label>
             <span className="mdl-textfield__error">Input is not a number!</span>
           </div>
@@ -538,7 +538,7 @@ class Sensor extends Component {
               width={this.state.videoWidth}
               height={this.state.videoHeight}
               ref={this.setWebcamRef}
-              screenshotFormat="image/jpeg"
+              screenshotWidth={1280}
               videoConstraints={this.state.videoConstraints}
             />
           </div>
@@ -557,6 +557,8 @@ class Sensor extends Component {
             id="sensor_video_capture_id"
             src={this.state.videoBuff}
             alt={''}
+            width={1280}
+            height={720}
           />
         </div>
       )
