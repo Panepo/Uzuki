@@ -44,6 +44,7 @@ export default class ImageUploader extends Component {
             <input
               className="imageUploader_none"
               type="file"
+              accept="image/*"
               onChange={this.handleChange}
             />
           </label>

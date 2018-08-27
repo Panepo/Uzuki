@@ -370,6 +370,7 @@ class Sensor extends Component {
           <input
             className="sensor_button_none"
             type="file"
+            accept="image/*"
             onChange={this.handleUpload}
             required
             multiple
