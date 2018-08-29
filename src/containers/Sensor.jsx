@@ -33,7 +33,7 @@ class Sensor extends Component {
         height: 720,
         facingMode: 'user'
       },
-      processTime: '0',
+      processTime: 0,
       predictTick: 500,
       mtcnnParams: { minFaceSize: 200 },
       recogMinConf: 0.5
@@ -145,7 +145,7 @@ class Sensor extends Component {
     if (data.length > 0) {
       this.setState({
         imageFile: data,
-        processTime: Math.floor(tend - tstart).toString() + ' ms',
+        processTime: Math.floor(tend - tstart),
         isSensing: false
       })
     } else {
@@ -184,7 +184,7 @@ class Sensor extends Component {
       isBusy: false,
       isTrained: true,
       imageFaceDesc: this.faceTrained,
-      processTime: Math.floor(tend - tstart).toString() + ' ms'
+      processTime: Math.floor(tend - tstart)
     })
   }
 
@@ -271,7 +271,7 @@ class Sensor extends Component {
     })
     const tend = performance.now()
     this.setState({
-      processTime: Math.floor(tend - tstart).toString() + ' ms'
+      processTime: Math.floor(tend - tstart)
     })
 
     if (this.state.isAlarming && alarm) {
@@ -383,7 +383,11 @@ class Sensor extends Component {
   }
 
   renderProceeTime = () => {
-    if (this.state.imageFile.length > 0 && this.state.isBusy === false) {
+    if (
+      this.state.imageFile.length > 0 &&
+      this.state.isBusy === false &&
+      this.state.processTime > 0
+    ) {
       return (
         <div>
           <div className="mdl-card__actions mdl-card--border sensor_borderline" />
@@ -396,7 +400,7 @@ class Sensor extends Component {
               value={this.state.processTime}
             />
             <label className="mdl-textfield__label" htmlFor="processTime_text">
-              Process Time
+              Process Time(ms)
             </label>
           </div>
         </div>
