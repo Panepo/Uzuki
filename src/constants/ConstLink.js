@@ -1,5 +1,5 @@
 export const listLink = [
-  { text: 'Github', link: 'https://github.com/Panepo/Yayoi-js' }
+  { text: 'Github', link: 'https://github.com/Panepo/Uzuki' }
 ]
 
 export const listDrawer = [
