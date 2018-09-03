@@ -34,9 +34,9 @@ class Sensor extends Component {
         facingMode: 'user'
       },
       processTime: 0,
-      predictTick: 500,
+      predictTick: 1000,
       mtcnnParams: { minFaceSize: 200 },
-      recogMinConf: 0.5
+      recogMinConf: 0.6
     }
     this.handleUpload = this.handleUpload.bind(this)
     this.handleClear = this.handleClear.bind(this)
@@ -46,6 +46,7 @@ class Sensor extends Component {
     this.handleAlarmControl = this.handleAlarmControl.bind(this)
     this.handleConf = this.handleConf.bind(this)
     this.handleTick = this.handleTick.bind(this)
+    this.handleFaceSize = this.handleFaceSize.bind(this)
     this.faceTrained = []
     this.faceInput = []
   }
@@ -249,7 +250,7 @@ class Sensor extends Component {
         } else {
           alarm = true
           return (
-            'person_' +
+            'boss_' +
             bestMatch.id +
             ' ' +
             Math.floor(100 - bestMatch.distance * 100).toString() +
@@ -264,8 +265,8 @@ class Sensor extends Component {
         y + boxHeight,
         dispText(bestMatch),
         Object.assign(faceapi.getDefaultDrawOptions(), {
-          color: 'red',
-          fontSize: 16
+          color: 'cyan',
+          fontSize: 20
         })
       )
     })
@@ -307,15 +308,30 @@ class Sensor extends Component {
 
   handleConf = event => {
     const checkConf = inputConf => {
-      if (inputConf > 0.99) {
-        return 0.99
-      } else if (inputConf < 0.01) {
-        return 0.01
+      if (inputConf > 99) {
+        return 99
+      } else if (inputConf < 1) {
+        return 1
       } else {
         return inputConf
       }
     }
-    this.setState({ recogMinConf: 1 - checkConf(event.target.value) })
+    this.setState({ recogMinConf: 100 - checkConf(event.target.value) / 100 })
+  }
+
+  handleFaceSize = event => {
+    const checkSize = inputConf => {
+      if (inputConf > 10000) {
+        return 10000
+      } else if (inputConf < 50) {
+        return 50
+      } else {
+        return inputConf
+      }
+    }
+    this.setState({
+      mtcnnParams: { minFaceSize: checkSize(event.target.value) }
+    })
   }
 
   handleTick = event => {
@@ -503,12 +519,26 @@ class Sensor extends Component {
               className="mdl-textfield__input"
               type="text"
               pattern="-?[0-9]*(\.[0-9]+)?"
+              id="buttonSize"
+              value={this.state.mtcnnParams.minFaceSize}
+              onChange={this.handleFaceSize}
+            />
+            <label className="mdl-textfield__label" htmlFor="buttonSize">
+              Minimum Facesize
+            </label>
+            <span className="mdl-textfield__error">Input is not a number!</span>
+          </div>
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input
+              className="mdl-textfield__input"
+              type="text"
+              pattern="-?[0-9]*(\.[0-9]+)?"
               id="buttonConf"
-              value={1 - this.state.recogMinConf}
+              value={(1 - this.state.recogMinConf) * 100}
               onChange={this.handleConf}
             />
             <label className="mdl-textfield__label" htmlFor="buttonConf">
-              Confidence Threshold
+              Minimum Confidence(%)
             </label>
             <span className="mdl-textfield__error">Input is not a number!</span>
           </div>
@@ -543,7 +573,7 @@ class Sensor extends Component {
               width={this.state.videoWidth}
               height={this.state.videoHeight}
               ref={this.setWebcamRef}
-              screenshotWidth={1280}
+              screenshotWidth={this.state.videoConstraints.width}
               videoConstraints={this.state.videoConstraints}
             />
           </div>
@@ -562,8 +592,8 @@ class Sensor extends Component {
             id="sensor_video_capture_id"
             src={this.state.videoBuff}
             alt={''}
-            width={1280}
-            height={720}
+            width={this.state.videoConstraints.width}
+            height={this.state.videoConstraints.height}
           />
         </div>
       )
