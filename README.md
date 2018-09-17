@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Panepo/Uzuki.svg?branch=master)](https://travis-ci.org/Panepo/Uzuki.svg) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-Boss sensor javascript version. Popup nonsense activity generator when boss is approaching with your browser and webcam.
+React implementation of Boss sensor. Popup nonsense activity generator when boss is approaching with your browser and webcam.
 
 ## Requirements
 
@@ -22,13 +22,13 @@ First visit this [page](https://panepo.github.io/Uzuki/) and follow these steps:
 4. Start face detection
 5. Start boss sensor alarming
 
-When the boss approaches, browser will alarm you and the page will auto redirect to nonsense generator.
+When the boss approaches, browser will alarm you and the page will auto redirect to nonsense activity generator.
 
 ![nonsense](https://github.com/Panepo/Uzuki/blob/master/doc/nonsense.png)
 
 ## Install
 
-Nothing. Only a webcam and browser are needed.
+Nothing. Only a webcam and a tensorflow.js supported browser are needed.
 
 ## Library used
 
@@ -45,7 +45,6 @@ Nothing. Only a webcam and browser are needed.
 ### Development Requirements
 * node `^8.11.0`
 * yarn `^1.7.0`
-* python `^3.0.0`
 
 ### Getting Start
 
