@@ -36,6 +36,7 @@ Nothing. Only a webcam and a tensorflow.js supported browser are needed.
 * [Tensorflow.js](https://js.tensorflow.org/)
 * [React](https://facebook.github.io/react/)
 * [Redux](http://redux.js.org/)
+* [Create React App ](https://github.com/facebook/create-react-app)
 * [Material Design Lite](https://getmdl.io/)
 * [react-webcam](https://github.com/mozmorris/react-webcam)
 * [FlipMove](https://github.com/joshwcomeau/react-flip-move)
@@ -66,7 +67,7 @@ $ yarn start
 |`yarn <script>`       |Description|
 |-------------------|-----------|
 |`start`            |Serves your app at `localhost:3000`|
-|`test`             |`Working`|
+|`test`             |Run test code in ./src|
 |`lint`             |Lint code in ./src|
 |`prettier`         |Prettier code in ./src|
 |`build`            |Builds the production application to ./build|
@@ -74,7 +75,14 @@ $ yarn start
 
 ### Testing
 
-Working
+Jest is used for test runner. Jest will look for test files with any of the following naming conventions:
+
+* Files with `.js` suffix in `__tests__` folders.
+* Files with `.test.js` suffix.
+* Files with `.spec.js` suffix.
+
+Jest has an integrated coverage reporter that works well with ES6 and requires no configuration.
+Run `npm test -- --coverage` (note extra `--` in the middle) to include a coverage report.
 
 ### Production
 
