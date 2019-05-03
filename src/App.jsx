@@ -1,0 +1,66 @@
+// @flow
+
+import * as React from 'react'
+import PropTypes from 'prop-types'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { history } from './configureStore'
+import { ConnectedRouter } from 'connected-react-router'
+import { withStyles } from '@material-ui/core'
+import withRoot from './withRoot'
+
+import Header from './pages/Header'
+import Ribbon from './pages/Ribbon'
+import Footer from './pages/Footer'
+import NotFound from './pages/NotFound'
+
+import Home from './pages/Home/Home'
+import Setting from './pages/Setting/Setting'
+
+const styles = (theme: Object) => ({
+  root: {
+    display: 'flex',
+    minHeight: '100vh',
+    flexDirection: 'column'
+  },
+  content: {
+    marginTop: '-55vh',
+    marginBottom: '60px',
+    flex: 1
+  }
+})
+
+const routes = () => {
+  return (
+    <Switch>
+      <Route exact={true} path="/" component={Home} />
+      <Route exact={true} path="/home" component={Home} />
+      <Route exact={true} path="/setting" component={Setting} />
+      <Route component={NotFound} />
+    </Switch>
+  )
+}
+
+type Props = {
+  classes: Object
+}
+
+const App = (props: Props) => {
+  return (
+    <ConnectedRouter history={history}>
+      <BrowserRouter>
+        <div className={props.classes.root}>
+          <Header />
+          <Ribbon />
+          <div className={props.classes.content}>{routes()}</div>
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </ConnectedRouter>
+  )
+}
+
+App.propTypes = {
+  classes: PropTypes.object.isRequired
+}
+
+export default withRoot(withStyles(styles)(App))

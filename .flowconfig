@@ -1,0 +1,21 @@
+[ignore]
+.*/build/.*
+.*/archieve/.*
+
+[include]
+
+[libs]
+./flow-typed
+
+[lints]
+
+[options]
+emoji=true
+include_warnings=true
+esproposal.class_static_fields=enable
+esproposal.class_instance_fields=enable
+esproposal.export_star_as=enable
+esproposal.decorators=ignore
+suppress_comment= \\(.\\|\n\\)*\\$flow-disable-line
+
+[strict]

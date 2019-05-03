@@ -1,6 +1,14 @@
 import { combineReducers } from 'redux'
-import { default as reducerLayout } from './reducerLayout'
+import type { History } from 'history'
+import { connectRouter } from 'connected-react-router'
+import * as info from './info.reducer'
+import * as setting from './setting.reducer'
 
-export default combineReducers({
-  reducerLayout
-})
+const rootReducer = (history: History) =>
+  combineReducers({
+    router: connectRouter(history),
+    ...info,
+    ...setting
+  })
+
+export default rootReducer
