@@ -26,11 +26,7 @@ import IconSettings from '@material-ui/icons/Settings'
 
 const imageCamera = require('../../images/404.jpg')
 
-const styles = (theme: Object) => ({
-  hidden: {
-    display: 'none'
-  }
-})
+const styles = (theme: Object) => ({})
 
 type ProvidedProps = {
   classes: Object
@@ -41,7 +37,7 @@ type Props = {
   actionsT: Dispatch,
   dialogStatus: Boolean,
   setting: StateSetting,
-  toggleDialog: (target: string, onoff: boolean, name: string) => () => null
+  toggleDialog: (target: string, onoff: boolean, key: number) => () => null
 }
 
 type State = {
@@ -252,7 +248,19 @@ class DialogCamera extends React.Component<ProvidedProps & Props, State> {
 DialogCamera.propTypes = {
   classes: PropTypes.object.isRequired,
   dialogStatus: PropTypes.bool.isRequired,
-  toggleDialog: PropTypes.func.isRequired
+  toggleDialog: PropTypes.func.isRequired,
+  setting: PropTypes.shape({
+    rect: PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+      width: PropTypes.number,
+      height: PropTypes.number
+    }),
+    video: PropTypes.shape({
+      width: PropTypes.number,
+      height: PropTypes.number
+    })
+  })
 }
 
 const mapStateToProps = state => {

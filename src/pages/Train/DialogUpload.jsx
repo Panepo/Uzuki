@@ -33,7 +33,7 @@ type Props = {
   actionsI: Dispatch,
   actionsT: Dispatch,
   dialogStatus: boolean,
-  toggleDialog: (target: string, onoff: boolean, name: string) => () => null
+  toggleDialog: (target: string, onoff: boolean, key: number) => () => null
 }
 
 type State = {

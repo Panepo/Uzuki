@@ -67,14 +67,14 @@ type State = {
     camera: boolean
   },
   dialogKey: number,
-  processTime: string
+  processTime: number
 }
 
 class Train extends React.Component<ProvidedProps & Props, State> {
   state = {
     isLoading: true,
     isBusy: false,
-    processTime: '0',
+    processTime: 0,
     dialog: {
       upload: false,
       delete: false,
@@ -194,7 +194,7 @@ class Train extends React.Component<ProvidedProps & Props, State> {
     const tend = performance.now()
     this.setState({
       isBusy: false,
-      processTime: Math.floor(tend - tstart).toString() + ' ms'
+      processTime: Math.floor(tend - tstart)
     })
 
     if (labeledDescriptors.length > 0) {
@@ -219,13 +219,13 @@ class Train extends React.Component<ProvidedProps & Props, State> {
 
   render() {
     if (this.state.isLoading) {
-      return <Loading helmet={true} title={'Face Training | Minazuki'} />
+      return <Loading helmet={true} title={'Face Training | Uzuki'} />
     }
 
     return (
       <Layout
         helmet={true}
-        title={'Face Training | Minazuki'}
+        title={'Face Training | Uzuki'}
         gridNormal={8}
         gridPhone={10}
         content={
@@ -322,10 +322,10 @@ class Train extends React.Component<ProvidedProps & Props, State> {
               </Tooltip>
             </CardActions>
             <CardContent>
-              {parseInt(this.state.processTime, 10) > 0 ? (
+              {this.state.processTime > 0 ? (
                 <TextField
                   label="Process time"
-                  value={this.state.processTime}
+                  value={this.state.processTime.toString() + ' ms'}
                 />
               ) : null}
               {this.state.isBusy ? (
@@ -359,7 +359,10 @@ class Train extends React.Component<ProvidedProps & Props, State> {
 
 Train.propTypes = {
   classes: PropTypes.object.isRequired,
-  train: PropTypes.object.isRequired
+  train: PropTypes.shape({
+    face: PropTypes.arrayOf(PropTypes.string),
+    data: PropTypes.arrayOf(PropTypes.string)
+  }).isRequired
 }
 
 const mapStateToProps = state => {

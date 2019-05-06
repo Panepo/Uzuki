@@ -28,7 +28,7 @@ const styles = (theme: Object) => ({
 type Props = {
   classes: Object,
   faces: string[],
-  toggleDialog: (target: string, onoff: boolean, name: string) => () => null
+  toggleDialog: (target: string, onoff: boolean, key: number) => () => null
 }
 
 const RenderList = (props: Props) => {
@@ -64,6 +64,7 @@ const RenderList = (props: Props) => {
 
 RenderList.propTypes = {
   classes: PropTypes.object.isRequired,
+  faces: PropTypes.arrayOf(PropTypes.string).isRequired,
   toggleDialog: PropTypes.func.isRequired
 }
 

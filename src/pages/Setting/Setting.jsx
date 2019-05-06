@@ -327,7 +327,7 @@ class Setting extends React.Component<ProvidedProps & Props, State> {
     return (
       <Layout
         helmet={true}
-        title={'Camera Settings | Minazuki'}
+        title={'Camera Settings | Uzuki'}
         gridNormal={6}
         gridPhone={10}
         content={
