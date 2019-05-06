@@ -9,11 +9,12 @@ const initialState: StateTrain = {
   data: []
 }
 
-export const setting = createReducer(initialState, {
+export const train = createReducer(initialState, {
   [actionTrain.TRAIN_FACE_ADD](state: StateTrain, action: Action<string[]>) {
     return { ...state, face: state.face.concat(action.payload) }
   },
-  [actionTrain.TRAIN_FACE_REMOVE](state: StateTrain, action: Action<null>) {
+  [actionTrain.TRAIN_FACE_REMOVE](state: StateTrain, action: Action<number>) {
+    state.face.splice(action.payload, 1)
     return state
   },
   [actionTrain.TRAIN_FACE_CLEAR](state: StateTrain, action: Action<null>) {

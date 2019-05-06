@@ -15,6 +15,7 @@ import NotFound from './pages/NotFound'
 
 import Home from './pages/Home/Home'
 import Setting from './pages/Setting/Setting'
+import Train from './pages/Train/Train'
 
 const styles = (theme: Object) => ({
   root: {
@@ -35,6 +36,7 @@ const routes = () => {
       <Route exact={true} path="/" component={Home} />
       <Route exact={true} path="/home" component={Home} />
       <Route exact={true} path="/setting" component={Setting} />
+      <Route exact={true} path="/train" component={Train} />
       <Route component={NotFound} />
     </Switch>
   )
