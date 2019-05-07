@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import type { Dispatch } from '../../models'
 import type { StateSetting } from '../../models/setting.model'
+import type { StateImage } from '../../models/image.model'
 import * as actionTrain from '../../actions/train.action'
 import * as actionInfo from '../../actions/info.action'
 import { Link } from 'react-router-dom'
@@ -24,7 +25,9 @@ import IconUpload from '@material-ui/icons/CloudUpload'
 import IconCancel from '@material-ui/icons/Cancel'
 import IconSettings from '@material-ui/icons/Settings'
 
-const imageCamera = require('../../images/404.jpg')
+const imageCamera = require('../../images/camera.jpg')
+// const imageCamerau = require('../../images/uzukicamera.jpg')
+const imageCamerau = require('../../images/uzuki404.jpg')
 
 const styles = (theme: Object) => ({})
 
@@ -37,6 +40,7 @@ type Props = {
   actionsT: Dispatch,
   dialogStatus: Boolean,
   setting: StateSetting,
+  image: StateImage,
   toggleDialog: (target: string, onoff: boolean, key: number) => () => null
 }
 
@@ -224,7 +228,11 @@ class DialogCamera extends React.Component<ProvidedProps & Props, State> {
         />
       )
     } else {
-      return <img src={imageCamera} alt={'setting'} width={640} height={480} />
+      return this.props.image.switch ? (
+        <img src={imageCamerau} alt={'camera'} width={640} height={480} />
+      ) : (
+        <img src={imageCamera} alt={'camera'} width={640} height={480} />
+      )
     }
   }
 
@@ -264,7 +272,10 @@ DialogCamera.propTypes = {
 }
 
 const mapStateToProps = state => {
-  return { setting: state.setting }
+  return {
+    setting: state.setting,
+    image: state.image
+  }
 }
 
 const mapDispatchToProps = dispatch => {

@@ -4,12 +4,13 @@ import * as React from 'react'
 import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as actionInfo from '../../actions/actionInfo'
+import * as actionInfo from '../../actions/info.action'
 import type { Dispatch } from '../../models'
-import type { StateSetting } from '../../models/modelSetting'
+import type { StateSetting } from '../../models/setting.model'
 import type { StateTrain } from '../../models/train.model'
+import type { StateImage } from '../../models/image.model'
 import * as faceapi from 'face-api.js'
-import { createFaceMatcher } from '../../helpers/faceMatch.helper'
+import { createFaceMatcher } from '../../helpers/face.helper'
 import { resizeCanvasAndResults, drawFPS } from '../../helpers/face.helper'
 import Layout from '../Layout'
 import { Link } from 'react-router-dom'
@@ -19,7 +20,6 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
 import Typography from '@material-ui/core/Typography'
-import LinearProgress from '@material-ui/core/LinearProgress'
 import Divider from '@material-ui/core/Divider'
 import Grid from '@material-ui/core/Grid'
 import Tooltip from '@material-ui/core/Tooltip'
@@ -28,25 +28,18 @@ import IconCamera from '@material-ui/icons/Camera'
 import IconSettings from '@material-ui/icons/Settings'
 import IconSensor from '@material-ui/icons/Contacts'
 import IconDetect from '@material-ui/icons/RecordVoiceOver'
-import IconTrain from '@material-ui/icons/Polymer'
 
-const imageSensor = require('../../images/404.jpg')
-const imageBlack = require('../../images/black.png')
+import NotReady from './NotReady'
+import Loading from './Loading'
+
+const imageSensor = require('../../images/sensor.jpg')
+// const imageSensoru = require('../../images/uzukisensor.jpg')
+const imageSensoru = require('../../images/uzuki404.jpg')
 
 const styles = (theme: Object) => ({
-  paper: {
-    borderRadius: '2px',
-    paddingTop: '40px',
-    paddingBottom: '40px',
-    paddingLeft: '40px',
-    paddingRight: '40px'
-  },
   divider: {
     marginTop: '10px',
     marginBottom: '10px'
-  },
-  hidden: {
-    display: 'none'
   },
   webcamContainer: {
     position: 'relative'
@@ -71,6 +64,7 @@ type ProvidedProps = {
 type Props = {
   train: StateTrain,
   setting: StateSetting,
+  image: StateImage,
   actionsI: Dispatch
 }
 
@@ -142,15 +136,15 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
         ctx.clearRect(
           0,
           0,
-          this.props.videoSetting.rect.width * 2,
-          this.props.videoSetting.rect.height * 2
+          this.props.setting.rect.width * 2,
+          this.props.setting.rect.height * 2
         )
       }
       this.setState({
         isSensing: false
       })
     } else {
-      this.faceMatcher = await createFaceMatcher(this.props.data.data)
+      this.faceMatcher = await createFaceMatcher(this.props.train.data)
       this.interval = await window.setInterval(() => this.faceMain(), 1000)
       this.setState({
         isSensing: true
@@ -186,7 +180,7 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
       const tickProcess = Math.floor(tend - tstart).toString() + ' ms'
       drawFPS(canvas, tickProcess, 'lime', {
         x: 10,
-        y: this.props.videoSetting.rect.height * 2 - 10
+        y: this.props.setting.rect.height * 2 - 10
       })
     }
   }
@@ -307,7 +301,7 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
   }
 
   renderWebCam = () => {
-    const { videoSetting } = this.props
+    const { setting } = this.props
 
     if (this.state.isPlaying) {
       return (
@@ -316,86 +310,34 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
             className={this.props.classes.webcam}
             audio={false}
             idCanvas={'sensor_webcamcrop'}
-            videoWidth={videoSetting.rect.width * 2}
-            videoHeight={videoSetting.rect.height * 2}
-            videoConstraints={videoSetting.video}
-            cropx={videoSetting.rect.x}
-            cropy={videoSetting.rect.y}
-            cropwidth={videoSetting.rect.width}
-            cropheight={videoSetting.rect.height}
+            videoWidth={setting.rect.width * 2}
+            videoHeight={setting.rect.height * 2}
+            videoConstraints={setting.video}
+            cropx={setting.rect.x}
+            cropy={setting.rect.y}
+            cropwidth={setting.rect.width}
+            cropheight={setting.rect.height}
           />
           <canvas
             className={this.props.classes.webcamOverlay}
             id={'sensor_webcamcrop_overlay'}
-            width={videoSetting.rect.width * 2}
-            height={videoSetting.rect.height * 2}
+            width={setting.rect.width * 2}
+            height={setting.rect.height * 2}
           />
         </div>
       )
     } else {
-      return <img src={imageSensor} alt={'sensor'} width={640} height={480} />
+      return this.props.image.switch ? (
+        <img src={imageSensoru} alt={'sensor'} width={640} height={480} />
+      ) : (
+        <img src={imageSensor} alt={'sensor'} width={640} height={480} />
+      )
     }
   }
 
   render() {
-    if (this.props.train.data.length > 0) {
-      return (
-        <Layout
-          helmet={true}
-          title={'Sensor | Uzuki'}
-          content={
-            <Card className={this.props.classes.paper}>
-              <CardContent>
-                <Typography>
-                  Face data not ready, go traininig first...
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Tooltip title="Upload boss picture and train computer to identify boss.">
-                  <Link to="/train">
-                    <IconButton
-                      className={this.props.classes.icon}
-                      color="primary">
-                      <IconTrain />
-                    </IconButton>
-                  </Link>
-                </Tooltip>
-                <Tooltip title="Configure your camera to fetch the best vision.">
-                  <Link to="/setting">
-                    <IconButton
-                      className={this.props.classes.icon}
-                      color="primary">
-                      <IconSettings />
-                    </IconButton>
-                  </Link>
-                </Tooltip>
-              </CardActions>
-            </Card>
-          }
-        />
-      )
-    }
-
-    if (this.state.isLoading) {
-      return (
-        <Layout
-          helmet={true}
-          title={'Sensor | Uzuki'}
-          content={
-            <Card className={this.props.classes.paper}>
-              <Typography>Loading...</Typography>
-              <LinearProgress />
-              <img
-                className={this.props.classes.hidden}
-                id="initial_black"
-                src={imageBlack}
-                alt="initial_black"
-              />
-            </Card>
-          }
-        />
-      )
-    }
+    if (this.props.train.data.length === 0) return <NotReady />
+    if (this.state.isLoading) return <Loading />
 
     return (
       <Layout
@@ -449,7 +391,8 @@ Sensor.propTypes = {
 const mapStateToProps = state => {
   return {
     train: state.train,
-    setting: state.setting
+    setting: state.setting,
+    image: state.image
   }
 }
 

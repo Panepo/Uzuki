@@ -8,6 +8,7 @@ import * as actionSetting from '../../actions/setting.action'
 import * as actionInfo from '../../actions/info.action'
 import type { Dispatch } from '../../models'
 import type { StateSetting } from '../../models/setting.model'
+import type { StateImage } from '../../models/image.model'
 import type {
   CanvasRect,
   CanvasRectError,
@@ -34,6 +35,7 @@ import IconCancel from '@material-ui/icons/Cancel'
 import IconSensor from '@material-ui/icons/Contacts'
 
 const imageSetting = require('../../images/setting.jpg')
+const imageSettingu = require('../../images/uzukisetting.jpg')
 
 const styles = (theme: Object) => ({
   formControl: {
@@ -73,7 +75,8 @@ type Props = {
   actionsS: Dispatch,
   actionsI: Dispatch,
   classes: Object,
-  setting: StateSetting
+  setting: StateSetting,
+  image: StateImage
 }
 
 type State = {
@@ -271,7 +274,11 @@ class Setting extends React.Component<ProvidedProps & Props, State> {
         />
       )
     } else {
-      return <img src={imageSetting} alt={'setting'} width={640} height={480} />
+      return this.props.image.switch ? (
+        <img src={imageSettingu} alt={'setting'} width={640} height={480} />
+      ) : (
+        <img src={imageSetting} alt={'setting'} width={640} height={480} />
+      )
     }
   }
 
@@ -373,7 +380,8 @@ Setting.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    setting: state.setting
+    setting: state.setting,
+    image: state.image
   }
 }
 

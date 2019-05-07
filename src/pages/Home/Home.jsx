@@ -2,9 +2,15 @@
 
 import * as React from 'react'
 import PropTypes from 'prop-types'
-import Layout from '../Layout'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import * as actionImage from '../../actions/image.action'
+import type { Dispatch } from '../../models'
 import type { RouterHistory } from '../../models'
+import type { StateImage } from '../../models/image.model'
+import type { StateTrain } from '../../models/train.model'
 import { withRouter } from 'react-router-dom'
+import Layout from '../Layout'
 import { withStyles } from '@material-ui/core'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -15,13 +21,19 @@ import IconButton from '@material-ui/core/IconButton'
 import IconTrain from '@material-ui/icons/Polymer'
 import IconSettings from '@material-ui/icons/Settings'
 import IconSensor from '@material-ui/icons/Contacts'
+import IconDone from '@material-ui/icons/Done'
+import IconImage from '@material-ui/icons/Image'
+import lightGreen from '@material-ui/core/colors/lightGreen'
 
-const imageHome = require('../../images/home.jpg')
+const imageHome = require('../../images/uzukihome.jpg')
 
 const styles = (theme: Object) => ({
   card: {
     minWidth: 275,
     marginBottom: theme.spacing.unit
+  },
+  icon2: {
+    color: lightGreen[500]
   }
 })
 
@@ -30,11 +42,19 @@ type ProvidedProps = {
   history: RouterHistory
 }
 
-type Props = {}
+type Props = {
+  image: StateImage,
+  train: StateTrain,
+  actionsI: Dispatch
+}
 
 class Home extends React.Component<ProvidedProps & Props> {
   handleRedirect = (link: string) => () => {
     this.props.history.push('/' + link)
+  }
+
+  toggleImage = (onoff: boolean) => () => {
+    this.props.actionsI.imageSwitch(onoff)
   }
 
   render() {
@@ -50,13 +70,15 @@ class Home extends React.Component<ProvidedProps & Props> {
             className={this.props.classes.grid}
             spacing={16}
             justify="center">
-            <Grid item={true} xs={8}>
-              <Card>
-                <CardActionArea>
-                  <img src={imageHome} alt={'Uzuki'} />
-                </CardActionArea>
-              </Card>
-            </Grid>
+            {this.props.image.switch ? (
+              <Grid item={true} xs={8}>
+                <Card>
+                  <CardActionArea>
+                    <img src={imageHome} alt={'Uzuki'} />
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            ) : null}
             <Grid item={true} xs={4}>
               <Card className={this.props.classes.card}>
                 <CardActionArea onClick={this.handleRedirect('train')}>
@@ -75,6 +97,13 @@ class Home extends React.Component<ProvidedProps & Props> {
                     }
                     subheader={
                       'Upload boss picture and train computer to identify boss.'
+                    }
+                    action={
+                      this.props.train.data.length > 0 ? (
+                        <IconButton className={this.props.classes.icon2}>
+                          <IconDone />
+                        </IconButton>
+                      ) : null
                     }
                   />
                 </CardActionArea>
@@ -100,26 +129,72 @@ class Home extends React.Component<ProvidedProps & Props> {
                   />
                 </CardActionArea>
               </Card>
+              {this.props.train.data.length > 0 ? (
+                <Card className={this.props.classes.card}>
+                  <CardActionArea onClick={this.handleRedirect('sensor')}>
+                    <CardHeader
+                      avatar={
+                        <IconButton
+                          className={this.props.classes.icon}
+                          color="primary">
+                          <IconSensor />
+                        </IconButton>
+                      }
+                      title={
+                        <Typography gutterBottom variant="h5" component="h2">
+                          Sensor
+                        </Typography>
+                      }
+                      subheader={
+                        'Start the sensor to detect if your boss is approaching.'
+                      }
+                    />
+                  </CardActionArea>
+                </Card>
+              ) : null}
               <Card className={this.props.classes.card}>
-                <CardActionArea onClick={this.handleRedirect('sensor')}>
-                  <CardHeader
-                    avatar={
-                      <IconButton
-                        className={this.props.classes.icon}
-                        color="primary">
-                        <IconSensor />
-                      </IconButton>
-                    }
-                    title={
-                      <Typography gutterBottom variant="h5" component="h2">
-                        Sensor
-                      </Typography>
-                    }
-                    subheader={
-                      'Start the sensor to detect if your boss is approaching.'
-                    }
-                  />
-                </CardActionArea>
+                {this.props.image.switch ? (
+                  <CardActionArea onClick={this.toggleImage(false)}>
+                    <CardHeader
+                      avatar={
+                        <IconButton
+                          className={this.props.classes.icon}
+                          color="primary">
+                          <IconImage />
+                        </IconButton>
+                      }
+                      title={
+                        <Typography gutterBottom variant="h5" component="h2">
+                          Image
+                        </Typography>
+                      }
+                      subheader={'Toggle Uzuki images.'}
+                      action={
+                        <IconButton className={this.props.classes.icon2}>
+                          <IconDone />
+                        </IconButton>
+                      }
+                    />
+                  </CardActionArea>
+                ) : (
+                  <CardActionArea onClick={this.toggleImage(true)}>
+                    <CardHeader
+                      avatar={
+                        <IconButton
+                          className={this.props.classes.icon}
+                          color="primary">
+                          <IconImage />
+                        </IconButton>
+                      }
+                      title={
+                        <Typography gutterBottom variant="h5" component="h2">
+                          Image
+                        </Typography>
+                      }
+                      subheader={'Toggle Uzuki images.'}
+                    />
+                  </CardActionArea>
+                )}
               </Card>
             </Grid>
           </Grid>
@@ -133,4 +208,20 @@ Home.propTypes = {
   classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(withRouter(Home))
+const mapStateToProps = state => {
+  return {
+    image: state.image,
+    train: state.train
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actionsI: bindActionCreators(actionImage, dispatch)
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(withRouter(Home)))
