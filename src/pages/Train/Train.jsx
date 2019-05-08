@@ -227,7 +227,7 @@ class Train extends React.Component<ProvidedProps & Props, State> {
         helmet={true}
         title={'Face Training | Uzuki'}
         gridNormal={8}
-        gridPhone={10}
+        gridPhone={12}
         content={
           <Card className={this.props.classes.card}>
             <CardContent>
@@ -303,14 +303,16 @@ class Train extends React.Component<ProvidedProps & Props, State> {
                   </IconButton>
                 </Tooltip>
               ) : null}
-              <Tooltip title="Training to get face data">
-                <IconButton
-                  className={this.props.classes.icon}
-                  color="primary"
-                  onClick={this.handleTrain}>
-                  <IconTrain />
-                </IconButton>
-              </Tooltip>
+              {this.props.train.face.length > 0 ? (
+                <Tooltip title="Training to get face data">
+                  <IconButton
+                    className={this.props.classes.icon}
+                    color="primary"
+                    onClick={this.handleTrain}>
+                    <IconTrain />
+                  </IconButton>
+                </Tooltip>
+              ) : null}
               <Tooltip title="To face recognize sensor">
                 <Link to="/sensor">
                   <IconButton

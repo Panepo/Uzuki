@@ -8,8 +8,12 @@ import GridListTile from '@material-ui/core/GridListTile'
 import GridListTileBar from '@material-ui/core/GridListTileBar'
 import IconButton from '@material-ui/core/IconButton'
 import IconDelete from '@material-ui/icons/Delete'
+import IconAdd from '@material-ui/icons/PersonAdd'
+import IconCamera from '@material-ui/icons/Camera'
 import Tooltip from '@material-ui/core/Tooltip'
 import { basename } from 'path'
+
+const imageList = require('../../images/list.jpg')
 
 const styles = (theme: Object) => ({
   gridList: {
@@ -35,7 +39,7 @@ const RenderList = (props: Props) => {
   return (
     <GridList
       cellHeight={256}
-      cols={6}
+      cols={5}
       spacing={1}
       className={props.classes.gridList}>
       {props.faces.map((file, index) => (
@@ -58,6 +62,35 @@ const RenderList = (props: Props) => {
           />
         </GridListTile>
       ))}
+      {props.faces.length === 0 ? (
+        <GridListTile cols={1} rows={1}>
+          <img src={imageList} alt={'add'} width={256} height={256} />
+          <GridListTileBar
+            title={'Add image'}
+            titlePosition="bottom"
+            actionIcon={
+              <div>
+                <Tooltip title="Add face image from computer">
+                  <IconButton
+                    className={props.classes.icon}
+                    onClick={props.toggleDialog('upload', true, 0)}>
+                    <IconAdd />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Start camera to capture face image">
+                  <IconButton
+                    className={props.classes.icon}
+                    onClick={props.toggleDialog('camera', true, 0)}>
+                    <IconCamera />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            }
+            actionPosition="right"
+            className={props.classes.titleBar}
+          />
+        </GridListTile>
+      ) : null}
     </GridList>
   )
 }

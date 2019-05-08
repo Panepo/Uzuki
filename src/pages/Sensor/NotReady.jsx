@@ -58,7 +58,7 @@ class NotReady extends React.Component<ProvidedProps & Props> {
                 Uzuki
               </Typography>
               <Typography component="p">
-                Face data not ready, go traininig first...
+                Face data not ready, go traininig first.
               </Typography>
             </CardContent>
             <CardActions>
