@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import PropTypes from 'prop-types'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router'
 import { history } from './configureStore'
 import { ConnectedRouter } from 'connected-react-router'
 import { withStyles } from '@material-ui/core'
@@ -51,14 +51,12 @@ type Props = {
 const App = (props: Props) => {
   return (
     <ConnectedRouter history={history}>
-      <BrowserRouter history={history}>
-        <div className={props.classes.root}>
-          <Header />
-          <Ribbon />
-          <div className={props.classes.content}>{routes()}</div>
-          <Footer />
-        </div>
-      </BrowserRouter>
+      <div className={props.classes.root}>
+        <Header />
+        <Ribbon />
+        <div className={props.classes.content}>{routes()}</div>
+        <Footer />
+      </div>
     </ConnectedRouter>
   )
 }
