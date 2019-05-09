@@ -51,7 +51,7 @@ type Props = {
 const App = (props: Props) => {
   return (
     <ConnectedRouter history={history}>
-      <BrowserRouter>
+      <BrowserRouter history={history}>
         <div className={props.classes.root}>
           <Header />
           <Ribbon />
