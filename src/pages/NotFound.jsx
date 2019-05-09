@@ -64,7 +64,10 @@ class NotFound extends React.Component<ProvidedProps & Props> {
 }
 
 NotFound.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  image: PropTypes.shape({
+    switch: PropTypes.bool.isRequired
+  })
 }
 
 const mapStateToProps = state => {

@@ -66,7 +66,8 @@
     "husky": "^0.14.3",
     "lint-staged": "^7.2.0",
     "prettier": "^1.16.4",
-    "redux-devtools-extension": "^2.13.8"
+    "redux-devtools-extension": "^2.13.8",
+    "redux-test-utils": "^0.3.0"
   },
   "eslintConfig": {
     "extends": [
