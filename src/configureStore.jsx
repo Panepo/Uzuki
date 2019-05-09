@@ -18,7 +18,7 @@ const persistConfig: PersistConfig = {
   key: 'root',
   version: 1,
   storage: localforage,
-  whitelist: []
+  whitelist: ['setting', 'image', 'train']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer(history))

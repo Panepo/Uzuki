@@ -17,7 +17,6 @@ import Home from './pages/Home/Home'
 import Setting from './pages/Setting/Setting'
 import Train from './pages/Train/Train'
 import Sensor from './pages/Sensor/Sensor'
-import Cover from './pages/Cover/Cover'
 
 const styles = (theme: Object) => ({
   root: {
@@ -40,7 +39,6 @@ const routes = () => {
       <Route exact={true} path="/setting" component={Setting} />
       <Route exact={true} path="/train" component={Train} />
       <Route exact={true} path="/sensor" component={Sensor} />
-      <Route exact={true} path="/cover" component={Cover} />
       <Route component={NotFound} />
     </Switch>
   )

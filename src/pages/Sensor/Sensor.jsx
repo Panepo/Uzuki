@@ -5,10 +5,11 @@ import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as actionInfo from '../../actions/info.action'
-import type { Dispatch } from '../../models'
+import type { Dispatch, RouterHistory } from '../../models'
 import type { StateSetting } from '../../models/setting.model'
 import type { StateTrain } from '../../models/train.model'
 import type { StateImage } from '../../models/image.model'
+import { withRouter } from 'react-router-dom'
 import * as faceapi from 'face-api.js'
 import { createFaceMatcher } from '../../helpers/face.helper'
 import { resizeCanvasAndResults, drawFPS } from '../../helpers/face.helper'
@@ -28,9 +29,11 @@ import IconCamera from '@material-ui/icons/Camera'
 import IconSettings from '@material-ui/icons/Settings'
 import IconSensor from '@material-ui/icons/Contacts'
 import IconDetect from '@material-ui/icons/RecordVoiceOver'
+import IconCover from '@material-ui/icons/BrightnessHigh'
 
 import NotReady from './NotReady'
 import Loading from './Loading'
+import DialogCover from './DialogCover'
 
 const imageSensor = require('../../images/sensor.jpg')
 // const imageSensoru = require('../../images/uzukisensor.jpg')
@@ -58,7 +61,8 @@ const styles = (theme: Object) => ({
 })
 
 type ProvidedProps = {
-  classes: Object
+  classes: Object,
+  history: RouterHistory
 }
 
 type Props = {
@@ -75,8 +79,12 @@ type State = {
   isDetecting: boolean,
   processTime: number,
   detectThreshold: number,
-  detectSize: number
+  detectSize: number,
+  dialog: {
+    cover: boolean
+  }
 }
+
 class Sensor extends React.Component<ProvidedProps & Props, State> {
   state = {
     isLoading: true,
@@ -85,7 +93,10 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
     isDetecting: false,
     processTime: 0,
     detectThreshold: 50,
-    detectSize: 160
+    detectSize: 160,
+    dialog: {
+      cover: true
+    }
   }
   interval: number = 0
   faceMatcher = null
@@ -114,6 +125,12 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
   // ================================================================================
   // React event handler functions
   // ================================================================================
+  toggleDialog = (target: string, onoff: boolean) => () => {
+    this.setState({
+      dialog: { ...this.state.dialog, [target]: onoff }
+    })
+  }
+
   handleWebcam = () => {
     if (this.state.isPlaying) {
       this.setState({
@@ -207,7 +224,14 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
           // $flow-disable-line
           const match = this.faceMatcher.findBestMatch(descriptor).toString()
 
-          if (this.state.isDetecting) console.log('FQ')
+          if (this.state.isDetecting) {
+            this.toggleDialog('cover', true)
+            this.setState({
+              isPlaying: false,
+              isSensing: false,
+              isDetecting: false
+            })
+          }
 
           return new faceapi.BoxWithText(detection.box, match)
         })
@@ -296,6 +320,14 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
         </Tooltip>
         {this.state.isPlaying ? renderRecognize : null}
         {this.state.isSensing ? renderDetect : null}
+        <Tooltip title="Start non-sense generator">
+          <IconButton
+            className={this.props.classes.icon}
+            onClick={this.toggleDialog('cover', true)}
+            color="primary">
+            <IconCover />
+          </IconButton>
+        </Tooltip>
       </CardActions>
     )
   }
@@ -361,6 +393,10 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
               <Divider className={this.props.classes.divider} />
             </CardContent>
             {this.renderButton()}
+            <DialogCover
+              dialogStatus={this.state.dialog.cover}
+              toggleDialog={this.toggleDialog}
+            />
           </Card>
         }
       />
@@ -405,4 +441,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(Sensor))
+)(withStyles(styles)(withRouter(Sensor)))

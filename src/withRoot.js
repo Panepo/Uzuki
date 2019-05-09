@@ -4,7 +4,7 @@ import React from 'react'
 import type { ComponentType } from 'react'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import pink from '@material-ui/core/colors/pink'
-import red from '@material-ui/core/colors/red'
+import deepPurple from '@material-ui/core/colors/deepPurple'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import 'typeface-roboto'
 
@@ -13,7 +13,7 @@ import 'typeface-roboto'
 const theme = createMuiTheme({
   palette: {
     primary: pink,
-    secondary: red
+    secondary: deepPurple
   },
   typography: {
     useNextVariants: true
