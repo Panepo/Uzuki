@@ -1,6 +1,23 @@
 {
-  "main.css": "static/css/main.a4bbf2d4.css",
-  "main.css.map": "static/css/main.a4bbf2d4.css.map",
-  "main.js": "static/js/main.17f0497b.js",
-  "main.js.map": "static/js/main.17f0497b.js.map"
+  "main.js": "/Uzuki/static/js/main.75bb07d3.chunk.js",
+  "main.js.map": "/Uzuki/static/js/main.75bb07d3.chunk.js.map",
+  "runtime~main.js": "/Uzuki/static/js/runtime~main.2359db00.js",
+  "runtime~main.js.map": "/Uzuki/static/js/runtime~main.2359db00.js.map",
+  "static/css/2.16cd40e5.chunk.css": "/Uzuki/static/css/2.16cd40e5.chunk.css",
+  "static/js/2.6e64fd5a.chunk.js": "/Uzuki/static/js/2.6e64fd5a.chunk.js",
+  "static/js/2.6e64fd5a.chunk.js.map": "/Uzuki/static/js/2.6e64fd5a.chunk.js.map",
+  "index.html": "/Uzuki/index.html",
+  "precache-manifest.ebfb6c6cf6979cd3953c7e76d8dbeb8a.js": "/Uzuki/precache-manifest.ebfb6c6cf6979cd3953c7e76d8dbeb8a.js",
+  "service-worker.js": "/Uzuki/service-worker.js",
+  "static/css/2.16cd40e5.chunk.css.map": "/Uzuki/static/css/2.16cd40e5.chunk.css.map",
+  "static/media/404.jpg": "/Uzuki/static/media/404.ae654961.jpg",
+  "static/media/camera.jpg": "/Uzuki/static/media/camera.f6d617f4.jpg",
+  "static/media/list.jpg": "/Uzuki/static/media/list.84b3ebaa.jpg",
+  "static/media/notready.jpg": "/Uzuki/static/media/notready.89639fb4.jpg",
+  "static/media/index.css": "/Uzuki/static/media/roboto-latin-900italic.bc833e72.woff",
+  "static/media/sensor.jpg": "/Uzuki/static/media/sensor.d130849f.jpg",
+  "static/media/setting.jpg": "/Uzuki/static/media/setting.fc73b925.jpg",
+  "static/media/uzuki404.jpg": "/Uzuki/static/media/uzuki404.5092f1c4.jpg",
+  "static/media/uzukihome.jpg": "/Uzuki/static/media/uzukihome.44d46098.jpg",
+  "static/media/uzukisetting.jpg": "/Uzuki/static/media/uzukisetting.417112d7.jpg"
 }
