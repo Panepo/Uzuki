@@ -4,7 +4,7 @@ import type { Action } from '../models/action.model'
 import { actionImage } from '../models/image.model'
 import type { StateImage } from '../models/image.model'
 
-const initialState: StateImage = {
+export const initialState: StateImage = {
   switch: false
 }
 

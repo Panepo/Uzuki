@@ -5,7 +5,7 @@ import { actionSetting } from '../models/setting.model'
 import type { StateSetting } from '../models/setting.model'
 import type { CanvasRect, VideoConstraints } from '../models/misc.model'
 
-const initialState: StateSetting = {
+export const initialState: StateSetting = {
   rect: { x: 100, y: 100, width: 100, height: 100 },
   video: {
     width: 1280,

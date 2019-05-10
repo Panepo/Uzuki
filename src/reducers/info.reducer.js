@@ -4,7 +4,7 @@ import type { Action } from '../models/action.model'
 import { actionInfo } from '../models/info.model'
 import type { StateInfo } from '../models/info.model'
 
-const initialState: StateInfo = {
+export const initialState: StateInfo = {
   onoff: false,
   variant: 'info',
   message: ''
