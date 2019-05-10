@@ -66,7 +66,12 @@ const RenderList = (props: Props) => {
       ))}
       {props.faces.length === 0 ? (
         <GridListTile cols={1} rows={1}>
-          <img src={props.toggleImage ? imageListu : imageList} alt={'add'} width={256} height={256} />
+          <img
+            src={props.toggleImage ? imageListu : imageList}
+            alt={'add'}
+            width={256}
+            height={256}
+          />
           <GridListTileBar
             title={'Add image'}
             titlePosition="bottom"

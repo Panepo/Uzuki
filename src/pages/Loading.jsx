@@ -41,8 +41,8 @@ const Loading = (props: Props) => {
 
 Loading.propTypes = {
   classes: PropTypes.object.isRequired,
-  helmet: PropTypes.bool,
-  title: PropTypes.string
+  helmet: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired
 }
 
 export default withStyles(styles)(Loading)
