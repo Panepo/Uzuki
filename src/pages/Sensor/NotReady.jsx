@@ -17,8 +17,7 @@ import Typography from '@material-ui/core/Typography'
 import Tooltip from '@material-ui/core/Tooltip'
 
 const imageNotReady = require('../../images/notready.jpg')
-// const imageNotReadyu = require('../../images/uzukinotready.jpg')
-const imageNotReadyu = require('../../images/uzuki404.jpg')
+const imageNotReadyu = require('../../images/uzukinotready.jpg')
 
 const styles = (theme: Object) => ({})
 

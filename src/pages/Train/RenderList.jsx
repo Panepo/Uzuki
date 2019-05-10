@@ -14,6 +14,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import { basename } from 'path'
 
 const imageList = require('../../images/list.jpg')
+const imageListu = require('../../images/uzukilist.png')
 
 const styles = (theme: Object) => ({
   gridList: {
@@ -32,7 +33,8 @@ const styles = (theme: Object) => ({
 type Props = {
   classes: Object,
   faces: string[],
-  toggleDialog: (target: string, onoff: boolean, key: number) => () => null
+  toggleDialog: (target: string, onoff: boolean, key: number) => () => null,
+  toggleImage: boolean
 }
 
 const RenderList = (props: Props) => {
@@ -64,7 +66,7 @@ const RenderList = (props: Props) => {
       ))}
       {props.faces.length === 0 ? (
         <GridListTile cols={1} rows={1}>
-          <img src={imageList} alt={'add'} width={256} height={256} />
+          <img src={props.toggleImage ? imageListu : imageList} alt={'add'} width={256} height={256} />
           <GridListTileBar
             title={'Add image'}
             titlePosition="bottom"
@@ -98,7 +100,8 @@ const RenderList = (props: Props) => {
 RenderList.propTypes = {
   classes: PropTypes.object.isRequired,
   faces: PropTypes.arrayOf(PropTypes.string).isRequired,
-  toggleDialog: PropTypes.func.isRequired
+  toggleDialog: PropTypes.func.isRequired,
+  toggleImage: PropTypes.bool
 }
 
 export default withStyles(styles)(RenderList)
