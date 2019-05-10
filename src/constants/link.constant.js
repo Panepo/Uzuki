@@ -10,6 +10,7 @@ export const linkHeader: LinkSite[] = [
 ]
 
 export const linkDrawer: LinkSite[] = [
+  { text: 'BossSensor', link: 'https://github.com/Hironsan/BossSensor' },
   {
     text: 'face-api.js',
     link: 'https://github.com/justadudewhohacks/face-api.js'

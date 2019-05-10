@@ -29,6 +29,7 @@ Nothing. Only a webcam and a tensorflow.js supported browser are needed.
 
 ## Reference
 
+* [BossSensor](https://github.com/Hironsan/BossSensor)
 * [face-api.js](https://github.com/justadudewhohacks/face-api.js)
 * [Tensorflow.js](https://js.tensorflow.org/)
 * [React](https://facebook.github.io/react/)
