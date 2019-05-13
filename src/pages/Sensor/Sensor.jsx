@@ -95,7 +95,7 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
     detectThreshold: 50,
     detectSize: 160,
     dialog: {
-      cover: true
+      cover: false
     }
   }
   interval: number = 0
@@ -225,6 +225,7 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
           const match = this.faceMatcher.findBestMatch(descriptor).toString()
 
           if (this.state.isDetecting) {
+            alert("Boss is apporching")
             this.toggleDialog('cover', true)
             this.setState({
               isPlaying: false,
@@ -289,7 +290,7 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
     )
 
     const renderDetect = this.state.isDetecting ? (
-      <Tooltip title="Record stop">
+      <Tooltip title="Detect stop">
         <IconButton
           className={this.props.classes.icon}
           onClick={this.handleDetect}
@@ -298,7 +299,7 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
         </IconButton>
       </Tooltip>
     ) : (
-      <Tooltip title="Record start">
+      <Tooltip title="Detect start">
         <IconButton
           className={this.props.classes.icon}
           onClick={this.handleDetect}
