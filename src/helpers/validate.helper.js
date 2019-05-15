@@ -10,20 +10,40 @@ import type {
 } from '../models/misc.model'
 
 export function validateRect(
-  input: CanvasRect
+  input: CanvasRect,
+  constraint: VideoConstraints
 ): {
   errors: CanvasRectError,
   isValid: boolean
 } {
-  const errors: CanvasRectError = {
+  let isValid = false
+  const errors = {
     x: { onoff: false, message: '' },
     y: { onoff: false, message: '' },
     width: { onoff: false, message: '' },
     height: { onoff: false, message: '' }
   }
+
+  if (isEmpty(input.x)) {
+    errors.x = { onoff: true, message: 'Invalid input' }
+    isValid = true
+  }
+  if (isEmpty(input.y)) {
+    errors.y = { onoff: true, message: 'Invalid input' }
+    isValid = true
+  }
+  if (isEmpty(input.width)) {
+    errors.width = { onoff: true, message: 'Invalid input' }
+    isValid = true
+  }
+  if (isEmpty(input.height)) {
+    errors.height = { onoff: true, message: 'Invalid input' }
+    isValid = true
+  }
+
   return {
     errors,
-    isValid: isEmpty(errors)
+    isValid: isValid
   }
 }
 
@@ -33,12 +53,23 @@ export function validateVideo(
   errors: VideoConstraintsError,
   isValid: boolean
 } {
-  const errors: VideoConstraintsError = {
+  let isValid = false
+  const errors = {
     width: { onoff: false, message: '' },
     height: { onoff: false, message: '' }
   }
+
+  if (isEmpty(input.width)) {
+    errors.width = { onoff: true, message: 'Invalid input' }
+    isValid = true
+  }
+  if (isEmpty(input.height)) {
+    errors.height = { onoff: true, message: 'Invalid input' }
+    isValid = true
+  }
+
   return {
     errors,
-    isValid: isEmpty(errors)
+    isValid: isValid
   }
 }

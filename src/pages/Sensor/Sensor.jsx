@@ -225,7 +225,7 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
           const match = this.faceMatcher.findBestMatch(descriptor).toString()
 
           if (this.state.isDetecting) {
-            alert("Boss is apporching")
+            alert('Boss is apporching')
             this.toggleDialog('cover', true)
             this.setState({
               isPlaying: false,

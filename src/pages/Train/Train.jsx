@@ -30,10 +30,11 @@ import IconAdd from '@material-ui/icons/AddPhotoAlternate'
 import IconCamera from '@material-ui/icons/Camera'
 import IconDelete from '@material-ui/icons/Clear'
 
-import DialogUpload from './DialogUpload'
-import DialogDelete from './DialogDelete'
-import DialogCamera from './DialogCamera'
-import RenderList from './RenderList'
+// Lazy component
+const DialogUpload = React.lazy(() => import('./DialogUpload'))
+const DialogDelete = React.lazy(() => import('./DialogDelete'))
+const DialogCamera = React.lazy(() => import('./DialogCamera'))
+const RenderList = React.lazy(() => import('./RenderList'))
 
 const styles = (theme: Object) => ({
   divider: {
@@ -218,6 +219,91 @@ class Train extends React.Component<ProvidedProps & Props, State> {
   // ================================================================================
 
   render() {
+    const renderButton = (
+      <CardActions>
+        <Tooltip title="Add face image from computer">
+          <IconButton
+            className={this.props.classes.icon}
+            component="label"
+            color="primary"
+            onClick={this.toggleDialog('upload', true, 0)}>
+            <IconAdd />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Start camera to capture face image">
+          <IconButton
+            className={this.props.classes.icon}
+            component="label"
+            color="primary"
+            onClick={this.toggleDialog('camera', true, 0)}>
+            <IconCamera />
+          </IconButton>
+        </Tooltip>
+        {this.props.train.face.length > 0 ? (
+          <Tooltip title="Clear face image">
+            <IconButton
+              className={this.props.classes.icon}
+              component="label"
+              color="primary"
+              onClick={this.handleFaceClear}>
+              <IconDelete />
+            </IconButton>
+          </Tooltip>
+        ) : null}
+        <Tooltip title="Import face data from computer">
+          <IconButton
+            className={this.props.classes.icon}
+            component="label"
+            color="primary">
+            <input
+              className={this.props.classes.hidden}
+              type="file"
+              accept="application/json"
+              onChange={this.handleDataImport}
+            />
+            <IconImport />
+          </IconButton>
+        </Tooltip>
+        {this.props.train.data.length > 0 ? (
+          <Tooltip title="Export face data to computer">
+            <IconButton
+              className={this.props.classes.icon}
+              color="primary"
+              onClick={this.handleDataExport}>
+              <IconExport />
+            </IconButton>
+          </Tooltip>
+        ) : null}
+        {this.props.train.data.length > 0 ? (
+          <Tooltip title="Clear the face data of the clinet">
+            <IconButton
+              className={this.props.classes.icon}
+              color="primary"
+              onClick={this.handleDataClear}>
+              <IconClear />
+            </IconButton>
+          </Tooltip>
+        ) : null}
+        {this.props.train.face.length > 0 ? (
+          <Tooltip title="Training to get face data">
+            <IconButton
+              className={this.props.classes.icon}
+              color="primary"
+              onClick={this.handleTrain}>
+              <IconTrain />
+            </IconButton>
+          </Tooltip>
+        ) : null}
+        <Tooltip title="To face recognize sensor">
+          <Link to="/sensor">
+            <IconButton className={this.props.classes.icon} color="primary">
+              <IconSensor />
+            </IconButton>
+          </Link>
+        </Tooltip>
+      </CardActions>
+    )
+
     if (this.state.isLoading) {
       return <Loading helmet={true} title={'Face Training | Uzuki'} />
     }
@@ -234,95 +320,14 @@ class Train extends React.Component<ProvidedProps & Props, State> {
               <Typography variant="h5" component="h2" gutterBottom>
                 Face Training
               </Typography>
-              <RenderList
-                faces={this.props.train.face}
-                toggleDialog={this.toggleDialog}
-              />
+              <React.Suspense fallback={<Typography>Loading...</Typography>}>
+                <RenderList
+                  faces={this.props.train.face}
+                  toggleDialog={this.toggleDialog}
+                />
+              </React.Suspense>
             </CardContent>
-            <CardActions>
-              <Tooltip title="Add face image from computer">
-                <IconButton
-                  className={this.props.classes.icon}
-                  component="label"
-                  color="primary"
-                  onClick={this.toggleDialog('upload', true, 0)}>
-                  <IconAdd />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Start camera to capture face image">
-                <IconButton
-                  className={this.props.classes.icon}
-                  component="label"
-                  color="primary"
-                  onClick={this.toggleDialog('camera', true, 0)}>
-                  <IconCamera />
-                </IconButton>
-              </Tooltip>
-              {this.props.train.face.length > 0 ? (
-                <Tooltip title="Clear face image">
-                  <IconButton
-                    className={this.props.classes.icon}
-                    component="label"
-                    color="primary"
-                    onClick={this.handleFaceClear}>
-                    <IconDelete />
-                  </IconButton>
-                </Tooltip>
-              ) : null}
-              <Tooltip title="Import face data from computer">
-                <IconButton
-                  className={this.props.classes.icon}
-                  component="label"
-                  color="primary">
-                  <input
-                    className={this.props.classes.hidden}
-                    type="file"
-                    accept="application/json"
-                    onChange={this.handleDataImport}
-                  />
-                  <IconImport />
-                </IconButton>
-              </Tooltip>
-              {this.props.train.data.length > 0 ? (
-                <Tooltip title="Export face data to computer">
-                  <IconButton
-                    className={this.props.classes.icon}
-                    color="primary"
-                    onClick={this.handleDataExport}>
-                    <IconExport />
-                  </IconButton>
-                </Tooltip>
-              ) : null}
-              {this.props.train.data.length > 0 ? (
-                <Tooltip title="Clear the face data of the clinet">
-                  <IconButton
-                    className={this.props.classes.icon}
-                    color="primary"
-                    onClick={this.handleDataClear}>
-                    <IconClear />
-                  </IconButton>
-                </Tooltip>
-              ) : null}
-              {this.props.train.face.length > 0 ? (
-                <Tooltip title="Training to get face data">
-                  <IconButton
-                    className={this.props.classes.icon}
-                    color="primary"
-                    onClick={this.handleTrain}>
-                    <IconTrain />
-                  </IconButton>
-                </Tooltip>
-              ) : null}
-              <Tooltip title="To face recognize sensor">
-                <Link to="/sensor">
-                  <IconButton
-                    className={this.props.classes.icon}
-                    color="primary">
-                    <IconSensor />
-                  </IconButton>
-                </Link>
-              </Tooltip>
-            </CardActions>
+            {renderButton}
             <CardContent>
               {this.state.processTime > 0 ? (
                 <TextField
@@ -337,21 +342,23 @@ class Train extends React.Component<ProvidedProps & Props, State> {
                 </div>
               ) : null}
             </CardContent>
-            <DialogDelete
-              dialogStatus={this.state.dialog.delete}
-              toggleDialog={this.toggleDialog}
-              imageSrc={this.props.train.face[this.state.dialogKey]}
-              handleAccept={this.handleAccept}
-            />
-            <DialogUpload
-              dialogStatus={this.state.dialog.upload}
-              toggleDialog={this.toggleDialog}
-            />
-            <DialogCamera
-              dialogStatus={this.state.dialog.camera}
-              toggleDialog={this.toggleDialog}
-              handleAccept={this.handleAccept}
-            />
+            <React.Suspense fallback={<Typography>Loading...</Typography>}>
+              <DialogDelete
+                dialogStatus={this.state.dialog.delete}
+                toggleDialog={this.toggleDialog}
+                imageSrc={this.props.train.face[this.state.dialogKey]}
+                handleAccept={this.handleAccept}
+              />
+              <DialogUpload
+                dialogStatus={this.state.dialog.upload}
+                toggleDialog={this.toggleDialog}
+              />
+              <DialogCamera
+                dialogStatus={this.state.dialog.camera}
+                toggleDialog={this.toggleDialog}
+                handleAccept={this.handleAccept}
+              />
+            </React.Suspense>
           </Card>
         }
       />
