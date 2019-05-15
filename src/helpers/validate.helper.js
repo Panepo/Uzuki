@@ -10,8 +10,7 @@ import type {
 } from '../models/misc.model'
 
 export function validateRect(
-  input: CanvasRect,
-  constraint: VideoConstraints
+  input: CanvasRect
 ): {
   errors: CanvasRectError,
   isValid: boolean
