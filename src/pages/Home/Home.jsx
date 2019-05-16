@@ -23,7 +23,8 @@ import IconSensor from '@material-ui/icons/Contacts'
 import IconDone from '@material-ui/icons/Done'
 import IconImage from '@material-ui/icons/Image'
 import lightGreen from '@material-ui/core/colors/lightGreen'
-import GitHubButton from 'react-github-btn'
+
+import Github from './Github'
 
 const imageHome = require('../../images/uzukihome.jpg')
 
@@ -58,35 +59,6 @@ class Home extends React.Component<ProvidedProps & Props> {
   }
 
   render() {
-    const renderGithub = (
-      <Grid
-        container={true}
-        className={this.props.classes.grid}
-        justify="center">
-        <GitHubButton
-          href="https://github.com/Panepo/Uzuki/subscription"
-          data-icon="octicon-eye"
-          data-size="large"
-          aria-label="Watch Panepo/Uzuki on GitHub">
-          Watch
-        </GitHubButton>
-        <GitHubButton
-          href="https://github.com/Panepo/Uzuki"
-          data-icon="octicon-star"
-          data-size="large"
-          aria-label="Star Panepo/Uzuki on GitHub">
-          Star
-        </GitHubButton>
-        <GitHubButton
-          href="https://github.com/Panepo/Uzuki/fork"
-          data-icon="octicon-repo-forked"
-          data-size="large"
-          aria-label="Fork Panepo/Uzuki on GitHub">
-          Fork
-        </GitHubButton>
-      </Grid>
-    )
-
     const renderTrain = (
       <Card className={this.props.classes.card}>
         <CardActionArea onClick={this.handleRedirect('train')}>
@@ -216,7 +188,7 @@ class Home extends React.Component<ProvidedProps & Props> {
               {renderSetting}
               {this.props.train.data.length > 0 ? renderSensor : null}
               {renderImage}
-              {renderGithub}
+              <Github />
             </Grid>
           </Grid>
         }
