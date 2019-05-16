@@ -23,6 +23,7 @@ import IconSensor from '@material-ui/icons/Contacts'
 import IconDone from '@material-ui/icons/Done'
 import IconImage from '@material-ui/icons/Image'
 import lightGreen from '@material-ui/core/colors/lightGreen'
+import GitHubButton from 'react-github-btn'
 
 const imageHome = require('../../images/uzukihome.jpg')
 
@@ -57,6 +58,138 @@ class Home extends React.Component<ProvidedProps & Props> {
   }
 
   render() {
+    const renderGithub = (
+      <Grid
+        container={true}
+        className={this.props.classes.grid}
+        justify="center">
+        <GitHubButton
+          href="https://github.com/Panepo/Uzuki/subscription"
+          data-icon="octicon-eye"
+          data-size="large"
+          aria-label="Watch Panepo/Uzuki on GitHub">
+          Watch
+        </GitHubButton>
+        <GitHubButton
+          href="https://github.com/Panepo/Uzuki"
+          data-icon="octicon-star"
+          data-size="large"
+          aria-label="Star Panepo/Uzuki on GitHub">
+          Star
+        </GitHubButton>
+        <GitHubButton
+          href="https://github.com/Panepo/Uzuki/fork"
+          data-icon="octicon-repo-forked"
+          data-size="large"
+          aria-label="Fork Panepo/Uzuki on GitHub">
+          Fork
+        </GitHubButton>
+      </Grid>
+    )
+
+    const renderTrain = (
+      <Card className={this.props.classes.card}>
+        <CardActionArea onClick={this.handleRedirect('train')}>
+          <CardHeader
+            avatar={
+              <IconButton className={this.props.classes.icon} color="primary">
+                <IconTrain />
+              </IconButton>
+            }
+            title={
+              <Typography gutterBottom variant="h5" component="h2">
+                Train
+              </Typography>
+            }
+            subheader={
+              'Upload boss picture and train computer to identify boss.'
+            }
+            action={
+              this.props.train.data.length > 0 ? (
+                <IconButton className={this.props.classes.icon2}>
+                  <IconDone />
+                </IconButton>
+              ) : null
+            }
+          />
+        </CardActionArea>
+      </Card>
+    )
+
+    const renderSetting = (
+      <Card className={this.props.classes.card}>
+        <CardActionArea onClick={this.handleRedirect('setting')}>
+          <CardHeader
+            avatar={
+              <IconButton className={this.props.classes.icon} color="primary">
+                <IconSettings />
+              </IconButton>
+            }
+            title={
+              <Typography gutterBottom variant="h5" component="h2">
+                Setting
+              </Typography>
+            }
+            subheader={'Configure your camera to fetch the best vision.'}
+          />
+        </CardActionArea>
+      </Card>
+    )
+
+    const renderSensor = (
+      <Card className={this.props.classes.card}>
+        <CardActionArea onClick={this.handleRedirect('sensor')}>
+          <CardHeader
+            avatar={
+              <IconButton className={this.props.classes.icon} color="primary">
+                <IconSensor />
+              </IconButton>
+            }
+            title={
+              <Typography gutterBottom variant="h5" component="h2">
+                Sensor
+              </Typography>
+            }
+            subheader={
+              'Start the sensor to detect if your boss is approaching.'
+            }
+          />
+        </CardActionArea>
+      </Card>
+    )
+
+    const renderImage = (
+      <Card className={this.props.classes.card}>
+        <CardActionArea
+          onClick={
+            this.props.image.switch
+              ? this.toggleImage(false)
+              : this.toggleImage(true)
+          }>
+          <CardHeader
+            avatar={
+              <IconButton className={this.props.classes.icon} color="primary">
+                <IconImage />
+              </IconButton>
+            }
+            title={
+              <Typography gutterBottom variant="h5" component="h2">
+                Image
+              </Typography>
+            }
+            subheader={'Toggle Uzuki images.'}
+            action={
+              this.props.image.switch ? (
+                <IconButton className={this.props.classes.icon2}>
+                  <IconDone />
+                </IconButton>
+              ) : null
+            }
+          />
+        </CardActionArea>
+      </Card>
+    )
+
     return (
       <Layout
         helmet={true}
@@ -79,122 +212,11 @@ class Home extends React.Component<ProvidedProps & Props> {
               </Grid>
             ) : null}
             <Grid item={true} xs={4}>
-              <Card className={this.props.classes.card}>
-                <CardActionArea onClick={this.handleRedirect('train')}>
-                  <CardHeader
-                    avatar={
-                      <IconButton
-                        className={this.props.classes.icon}
-                        color="primary">
-                        <IconTrain />
-                      </IconButton>
-                    }
-                    title={
-                      <Typography gutterBottom variant="h5" component="h2">
-                        Train
-                      </Typography>
-                    }
-                    subheader={
-                      'Upload boss picture and train computer to identify boss.'
-                    }
-                    action={
-                      this.props.train.data.length > 0 ? (
-                        <IconButton className={this.props.classes.icon2}>
-                          <IconDone />
-                        </IconButton>
-                      ) : null
-                    }
-                  />
-                </CardActionArea>
-              </Card>
-              <Card className={this.props.classes.card}>
-                <CardActionArea onClick={this.handleRedirect('setting')}>
-                  <CardHeader
-                    avatar={
-                      <IconButton
-                        className={this.props.classes.icon}
-                        color="primary">
-                        <IconSettings />
-                      </IconButton>
-                    }
-                    title={
-                      <Typography gutterBottom variant="h5" component="h2">
-                        Setting
-                      </Typography>
-                    }
-                    subheader={
-                      'Configure your camera to fetch the best vision.'
-                    }
-                  />
-                </CardActionArea>
-              </Card>
-              {this.props.train.data.length > 0 ? (
-                <Card className={this.props.classes.card}>
-                  <CardActionArea onClick={this.handleRedirect('sensor')}>
-                    <CardHeader
-                      avatar={
-                        <IconButton
-                          className={this.props.classes.icon}
-                          color="primary">
-                          <IconSensor />
-                        </IconButton>
-                      }
-                      title={
-                        <Typography gutterBottom variant="h5" component="h2">
-                          Sensor
-                        </Typography>
-                      }
-                      subheader={
-                        'Start the sensor to detect if your boss is approaching.'
-                      }
-                    />
-                  </CardActionArea>
-                </Card>
-              ) : null}
-              <Card className={this.props.classes.card}>
-                {this.props.image.switch ? (
-                  <CardActionArea onClick={this.toggleImage(false)}>
-                    <CardHeader
-                      avatar={
-                        <IconButton
-                          className={this.props.classes.icon}
-                          color="primary">
-                          <IconImage />
-                        </IconButton>
-                      }
-                      title={
-                        <Typography gutterBottom variant="h5" component="h2">
-                          Image
-                        </Typography>
-                      }
-                      subheader={'Toggle Uzuki images.'}
-                      action={
-                        <IconButton className={this.props.classes.icon2}>
-                          <IconDone />
-                        </IconButton>
-                      }
-                    />
-                  </CardActionArea>
-                ) : (
-                  <CardActionArea onClick={this.toggleImage(true)}>
-                    <CardHeader
-                      avatar={
-                        <IconButton
-                          className={this.props.classes.icon}
-                          color="primary">
-                          <IconImage />
-                        </IconButton>
-                      }
-                      title={
-                        <Typography gutterBottom variant="h5" component="h2">
-                          Image
-                        </Typography>
-                      }
-                      subheader={'Toggle Uzuki images.'}
-                    />
-                  </CardActionArea>
-                )}
-              </Card>
+              {renderTrain}
+              {renderSetting}
+              {this.props.train.data.length > 0 ? renderSensor : null}
+              {renderImage}
+              {renderGithub}
             </Grid>
           </Grid>
         }
