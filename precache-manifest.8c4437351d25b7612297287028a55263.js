@@ -4,8 +4,8 @@ self.__precacheManifest = [
     "url": "/Uzuki/static/media/roboto-latin-500.28546717.woff2"
   },
   {
-    "revision": "9ec919d159094c1bdc43",
-    "url": "/Uzuki/static/js/main.9ec919d1.chunk.js"
+    "revision": "7765485098659d725d49",
+    "url": "/Uzuki/static/js/main.77654850.chunk.js"
   },
   {
     "revision": "a38a9a78c2ebd1ac99050ed838b587bf",
@@ -176,7 +176,7 @@ self.__precacheManifest = [
     "url": "/Uzuki/static/css/2.16cd40e5.chunk.css"
   },
   {
-    "revision": "e420dd4d3ef610e0e91d1f393afb2db4",
+    "revision": "9c2507cc6830208a770818ac105e5695",
     "url": "/Uzuki/index.html"
   }
 ];
