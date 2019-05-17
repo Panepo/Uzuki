@@ -85,12 +85,10 @@ class Train extends React.Component<ProvidedProps & Props, State> {
   }
 
   componentDidMount = async () => {
-    // $flow-disable-line
-    await faceapi.loadTinyFaceDetectorModel(process.env.PUBLIC_URL + '/models')
-    // $flow-disable-line
-    await faceapi.loadFaceLandmarkTinyModel(process.env.PUBLIC_URL + '/models')
-    // $flow-disable-line
-    await faceapi.loadFaceRecognitionModel(process.env.PUBLIC_URL + '/models')
+    const url = 'https://panepo.github.io/Uzuki/models'
+    await faceapi.loadTinyFaceDetectorModel(url)
+    await faceapi.loadFaceLandmarkTinyModel(url)
+    await faceapi.loadFaceRecognitionModel(url)
     this.setState({ isLoading: false })
   }
 
