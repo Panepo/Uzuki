@@ -32,7 +32,7 @@
     "classnames": "^2.2.6",
     "connected-react-router": "^6.3.1",
     "core-js": "^3.0.1",
-    "face-api.js": "^0.19.0",
+    "face-api.js": "^0.20.0",
     "history": "^4.7.2",
     "is-empty": "^1.2.0",
     "localforage": "^1.7.3",

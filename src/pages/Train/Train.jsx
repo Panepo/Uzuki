@@ -377,8 +377,8 @@ class Train extends React.Component<ProvidedProps & Props, State> {
 Train.propTypes = {
   classes: PropTypes.object.isRequired,
   train: PropTypes.shape({
-    face: PropTypes.arrayOf(PropTypes.string),
-    data: PropTypes.arrayOf(PropTypes.string)
+    face: PropTypes.arrayOf(PropTypes.object),
+    data: PropTypes.arrayOf(PropTypes.object)
   }).isRequired
 }
 
