@@ -103,9 +103,12 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
 
   componentDidMount = async () => {
     if (this.props.train.data.length > 0) {
-      await faceapi.loadTinyFaceDetectorModel('/models')
-      await faceapi.loadFaceLandmarkTinyModel('/models')
-      await faceapi.loadFaceRecognitionModel('/models')
+      // $flow-disable-line
+      await faceapi.loadTinyFaceDetectorModel(process.env.PUBLIC_URL + '/models')
+      // $flow-disable-line
+      await faceapi.loadFaceLandmarkTinyModel(process.env.PUBLIC_URL + '/models')
+      // $flow-disable-line
+      await faceapi.loadFaceRecognitionModel(process.env.PUBLIC_URL + '/models')
       const initial = document.getElementById('initial_black')
       await faceapi
         .detectAllFaces(
