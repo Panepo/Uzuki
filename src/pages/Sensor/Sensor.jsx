@@ -103,10 +103,17 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
 
   componentDidMount = async () => {
     if (this.props.train.data.length > 0) {
-      const url = 'https://panepo.github.io/Uzuki/models'
-      await faceapi.loadTinyFaceDetectorModel(url)
-      await faceapi.loadFaceLandmarkTinyModel(url)
-      await faceapi.loadFaceRecognitionModel(url)
+      const dev = process.env.NODE_ENV === 'development'
+      if (dev) {
+        await faceapi.loadTinyFaceDetectorModel('/models')
+        await faceapi.loadFaceLandmarkTinyModel('/models')
+        await faceapi.loadFaceRecognitionModel('/models')
+      } else {
+        const url = 'https://panepo.github.io/Uzuki/models'
+        await faceapi.loadTinyFaceDetectorModel(url)
+        await faceapi.loadFaceLandmarkTinyModel(url)
+        await faceapi.loadFaceRecognitionModel(url)
+      }
       const initial = document.getElementById('initial_black')
       await faceapi
         .detectAllFaces(

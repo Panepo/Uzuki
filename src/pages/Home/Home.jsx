@@ -16,7 +16,6 @@ import Typography from '@material-ui/core/Typography'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardActionArea from '@material-ui/core/CardActionArea'
-import IconButton from '@material-ui/core/IconButton'
 import IconTrain from '@material-ui/icons/Polymer'
 import IconSettings from '@material-ui/icons/Settings'
 import IconSensor from '@material-ui/icons/Contacts'
@@ -63,11 +62,7 @@ class Home extends React.Component<ProvidedProps & Props> {
       <Card className={this.props.classes.card}>
         <CardActionArea onClick={this.handleRedirect('train')}>
           <CardHeader
-            avatar={
-              <IconButton className={this.props.classes.icon} color="primary">
-                <IconTrain />
-              </IconButton>
-            }
+            avatar={<IconTrain color="primary" />}
             title={
               <Typography gutterBottom variant="h5" component="h2">
                 Train
@@ -78,9 +73,7 @@ class Home extends React.Component<ProvidedProps & Props> {
             }
             action={
               this.props.train.data.length > 0 ? (
-                <IconButton className={this.props.classes.icon2}>
-                  <IconDone />
-                </IconButton>
+                <IconDone className={this.props.classes.icon2} />
               ) : null
             }
           />
@@ -92,11 +85,7 @@ class Home extends React.Component<ProvidedProps & Props> {
       <Card className={this.props.classes.card}>
         <CardActionArea onClick={this.handleRedirect('setting')}>
           <CardHeader
-            avatar={
-              <IconButton className={this.props.classes.icon} color="primary">
-                <IconSettings />
-              </IconButton>
-            }
+            avatar={<IconSettings color="primary" />}
             title={
               <Typography gutterBottom variant="h5" component="h2">
                 Setting
@@ -112,11 +101,7 @@ class Home extends React.Component<ProvidedProps & Props> {
       <Card className={this.props.classes.card}>
         <CardActionArea onClick={this.handleRedirect('sensor')}>
           <CardHeader
-            avatar={
-              <IconButton className={this.props.classes.icon} color="primary">
-                <IconSensor />
-              </IconButton>
-            }
+            avatar={<IconSensor color="primary" />}
             title={
               <Typography gutterBottom variant="h5" component="h2">
                 Sensor
@@ -139,11 +124,7 @@ class Home extends React.Component<ProvidedProps & Props> {
               : this.toggleImage(true)
           }>
           <CardHeader
-            avatar={
-              <IconButton className={this.props.classes.icon} color="primary">
-                <IconImage />
-              </IconButton>
-            }
+            avatar={<IconImage color="primary" />}
             title={
               <Typography gutterBottom variant="h5" component="h2">
                 Image
@@ -152,9 +133,7 @@ class Home extends React.Component<ProvidedProps & Props> {
             subheader={'Toggle Uzuki images.'}
             action={
               this.props.image.switch ? (
-                <IconButton className={this.props.classes.icon2}>
-                  <IconDone />
-                </IconButton>
+                <IconDone className={this.props.classes.icon2} />
               ) : null
             }
           />
