@@ -156,7 +156,7 @@ class Train extends React.Component<ProvidedProps & Props, State> {
       encodeURIComponent(JSON.stringify(this.props.train.data))
     let downloadAnchorNode = document.createElement('a')
     downloadAnchorNode.setAttribute('href', 'data:' + data)
-    downloadAnchorNode.setAttribute('download', 'faces.json')
+    downloadAnchorNode.setAttribute('download', 'boss.json')
     downloadAnchorNode.click()
     downloadAnchorNode.remove()
   }

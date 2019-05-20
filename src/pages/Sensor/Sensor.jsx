@@ -242,6 +242,20 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
         const options = { label }
         const drawBox = new faceapi.draw.DrawBox(detection.box, options)
         drawBox.draw(canvas)
+
+        if (this.state.isDetecting) {
+          const labelSplit = label.split(' ')
+          if (labelSplit[0] === 'Boss') {
+            this.setState({
+              isPlaying: false,
+              isSensing: false,
+              isDetecting: false,
+              dialog: {
+                cover: true
+              }
+            })
+          }
+        }
       })
     }
   }
