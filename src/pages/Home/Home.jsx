@@ -144,7 +144,7 @@ class Home extends React.Component<ProvidedProps & Props> {
     return (
       <Layout
         helmet={true}
-        title={'Home | Uzuki'}
+        title={'Home'}
         gridNormal={10}
         gridPhone={12}
         content={

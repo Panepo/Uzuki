@@ -9,6 +9,7 @@ import * as actionTrain from '../../actions/train.action'
 import type { Dispatch } from '../../models'
 import type { StateTrain } from '../../models/train.model'
 import * as faceapi from 'face-api.js'
+import { environment } from '../../environment'
 import Layout from '../Layout'
 import Loading from '../Loading'
 import { Link } from 'react-router-dom'
@@ -87,14 +88,13 @@ class Train extends React.Component<ProvidedProps & Props, State> {
   componentDidMount = async () => {
     const dev = process.env.NODE_ENV === 'development'
     if (dev) {
-      await faceapi.loadTinyFaceDetectorModel('/models')
-      await faceapi.loadFaceLandmarkTinyModel('/models')
-      await faceapi.loadFaceRecognitionModel('/models')
+      await faceapi.loadTinyFaceDetectorModel(environment.urlDev + 'models')
+      await faceapi.loadFaceLandmarkTinyModel(environment.urlDev + 'models')
+      await faceapi.loadFaceRecognitionModel(environment.urlDev + 'models')
     } else {
-      const url = 'https://panepo.github.io/Uzuki/models'
-      await faceapi.loadTinyFaceDetectorModel(url)
-      await faceapi.loadFaceLandmarkTinyModel(url)
-      await faceapi.loadFaceRecognitionModel(url)
+      await faceapi.loadTinyFaceDetectorModel(environment.urlProd + 'models')
+      await faceapi.loadFaceLandmarkTinyModel(environment.urlProd + 'models')
+      await faceapi.loadFaceRecognitionModel(environment.urlProd + 'models')
     }
     this.setState({ isLoading: false })
   }
@@ -313,13 +313,13 @@ class Train extends React.Component<ProvidedProps & Props, State> {
     )
 
     if (this.state.isLoading) {
-      return <Loading helmet={true} title={'Face Training | Uzuki'} />
+      return <Loading helmet={true} title={'Face Training'} />
     }
 
     return (
       <Layout
         helmet={true}
-        title={'Face Training | Uzuki'}
+        title={'Face Training'}
         gridNormal={8}
         gridPhone={12}
         content={

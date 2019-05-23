@@ -5,11 +5,12 @@ import ReactDOM from 'react-dom'
 import ReduxRoot from './ReduxRoot'
 import registerServiceWorker from './serviceWorker'
 import * as ReactGA from 'react-ga'
+import { environment } from './environment'
 
 const rootEl = document.getElementById('uzuki')
 ReactDOM.render(<ReduxRoot />, rootEl)
 
-ReactGA.initialize('UA-106126363-3')
+ReactGA.initialize(environment.GoogleAnalyticsID)
 ReactGA.pageview(window.location.pathname + window.location.search)
 
 if (module.hot) {

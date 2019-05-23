@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import { linkDrawer, linkHeader } from '../constants/link.constant'
 import type { LinkSite } from '../models/misc.model'
+import { environment } from '../environment'
 
 const styles = (theme: Object) => ({
   root: {},
@@ -39,7 +40,7 @@ const styles = (theme: Object) => ({
     flexGrow: 1
   },
   menuButton: {
-    color: '#ff6699',
+    color: environment.ColorMenuIcon,
     marginLeft: -12,
     marginRight: 20
   }
@@ -128,7 +129,7 @@ class Header extends React.Component<ProvidedProps & Props, State> {
               color="inherit"
               className={classes.grow}
               noWrap>
-              Uzuki
+              {environment.title}
             </Typography>
             {renderLink}
           </Toolbar>

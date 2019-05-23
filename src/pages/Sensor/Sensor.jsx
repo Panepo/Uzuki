@@ -12,6 +12,7 @@ import type { StateImage } from '../../models/image.model'
 import { withRouter } from 'react-router-dom'
 import * as faceapi from 'face-api.js'
 import { createFaceMatcher } from '../../helpers/face.helper'
+import { environment } from '../../environment'
 import Layout from '../Layout'
 import { Link } from 'react-router-dom'
 import WebcamCrop from '../../componments/WebcamCrop'
@@ -77,8 +78,6 @@ type State = {
   isSensing: boolean,
   isDetecting: boolean,
   processTime: number,
-  detectThreshold: number,
-  detectSize: number,
   dialog: {
     cover: boolean
   }
@@ -91,35 +90,33 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
     isSensing: false,
     isDetecting: false,
     processTime: 0,
-    detectThreshold: 50,
-    detectSize: 160,
     dialog: {
       cover: false
     }
   }
   interval: number = 0
+  tick: number = 0
   faceMatcher = null
 
   componentDidMount = async () => {
     if (this.props.train.data.length > 0) {
       const dev = process.env.NODE_ENV === 'development'
       if (dev) {
-        await faceapi.loadTinyFaceDetectorModel('/models')
-        await faceapi.loadFaceLandmarkTinyModel('/models')
-        await faceapi.loadFaceRecognitionModel('/models')
+        await faceapi.loadTinyFaceDetectorModel(environment.urlDev + 'models')
+        await faceapi.loadFaceLandmarkTinyModel(environment.urlDev + 'models')
+        await faceapi.loadFaceRecognitionModel(environment.urlDev + 'models')
       } else {
-        const url = 'https://panepo.github.io/Uzuki/models'
-        await faceapi.loadTinyFaceDetectorModel(url)
-        await faceapi.loadFaceLandmarkTinyModel(url)
-        await faceapi.loadFaceRecognitionModel(url)
+        await faceapi.loadTinyFaceDetectorModel(environment.urlProd + 'models')
+        await faceapi.loadFaceLandmarkTinyModel(environment.urlProd + 'models')
+        await faceapi.loadFaceRecognitionModel(environment.urlProd + 'models')
       }
       const initial = document.getElementById('initial_black')
       await faceapi
         .detectAllFaces(
           initial,
           new faceapi.TinyFaceDetectorOptions({
-            inputSize: this.state.detectSize,
-            scoreThreshold: this.state.detectThreshold / 100
+            inputSize: environment.tinyInputSize,
+            scoreThreshold: environment.tinyThreshold
           })
         )
         .withFaceLandmarks(true)
@@ -169,7 +166,7 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
       })
     } else {
       this.faceMatcher = await createFaceMatcher(this.props.train.data)
-      this.interval = await window.setInterval(() => this.faceMain(), 1000)
+      this.interval = window.setInterval(async () => await this.faceMain(), 10)
       this.setState({
         isSensing: true
       })
@@ -198,10 +195,9 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
       canvas instanceof HTMLCanvasElement &&
       image instanceof HTMLCanvasElement
     ) {
-      const tstart = performance.now()
       await this.faceRecognize(canvas, image)
       const tend = performance.now()
-      const tickProcess = Math.floor(tend - tstart).toString() + ' ms'
+      const tickProcess = Math.floor(tend - this.tick).toString() + ' ms'
       const anchor = { x: 0, y: this.props.setting.rect.height * 2 }
       const drawOptions = {
         anchorPosition: 'TOP_LEFT',
@@ -214,6 +210,7 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
         drawOptions
       )
       drawBox.draw(canvas)
+      this.tick = tend
     }
   }
 
@@ -225,8 +222,8 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
       .detectAllFaces(
         image,
         new faceapi.TinyFaceDetectorOptions({
-          inputSize: this.state.detectSize,
-          scoreThreshold: this.state.detectThreshold / 100
+          inputSize: environment.tinyInputSize,
+          scoreThreshold: environment.tinyThreshold
         })
       )
       .withFaceLandmarks(true)
@@ -235,7 +232,6 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
     if (results) {
       faceapi.matchDimensions(canvas, image)
       const resizedResults = faceapi.resizeResults(results, image)
-      faceapi.draw.drawDetections(canvas, resizedResults)
       resizedResults.forEach(({ detection, descriptor }) => {
         // $flow-disable-line
         const label = this.faceMatcher.findBestMatch(descriptor).toString()
@@ -257,6 +253,9 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
           }
         }
       })
+    } else {
+      const context = canvas.getContext('2d')
+      context.clearRect(0, 0, canvas.width, canvas.height)
     }
   }
 
@@ -390,7 +389,7 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
     return (
       <Layout
         helmet={true}
-        title={'Sensor | Uzuki'}
+        title={'Sensor'}
         gridNormal={6}
         gridPhone={10}
         content={

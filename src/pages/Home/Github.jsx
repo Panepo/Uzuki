@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import GitHubButton from 'react-github-btn'
+import { environment } from '../../environment'
 
 const styles = (theme: Object) => ({
   root: {}
@@ -14,36 +15,36 @@ type Props = {
   classes: Object
 }
 
-const Ribbon = (props: Props) => {
+const Github = (props: Props) => {
   return (
     <Grid container={true} className={props.classes.grid} justify="center">
       <GitHubButton
-        href="https://github.com/Panepo/Uzuki/subscription"
+        href={environment.GithubLink + '/subscription'}
         data-icon="octicon-eye"
         data-size="large"
-        aria-label="Watch Panepo/Uzuki on GitHub">
+        aria-label={'Watch ' + environment.title + ' on GitHub'}>
         Watch
       </GitHubButton>
       <GitHubButton
-        href="https://github.com/Panepo/Uzuki"
+        href={environment.GithubLink}
         data-icon="octicon-star"
         data-size="large"
-        aria-label="Star Panepo/Uzuki on GitHub">
+        aria-label={'Star ' + environment.title + ' on GitHub'}>
         Star
       </GitHubButton>
       <GitHubButton
-        href="https://github.com/Panepo/Uzuki/fork"
+        href={environment.GithubLink + '/fork'}
         data-icon="octicon-repo-forked"
         data-size="large"
-        aria-label="Fork Panepo/Uzuki on GitHub">
+        aria-label={'Fork ' + environment.title + ' on GitHub'}>
         Fork
       </GitHubButton>
     </Grid>
   )
 }
 
-Ribbon.propTypes = {
+Github.propTypes = {
   classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(Ribbon)
+export default withStyles(styles)(Github)

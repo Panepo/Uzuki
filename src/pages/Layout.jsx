@@ -9,6 +9,7 @@ import type { Dispatch } from '../models'
 import type { StateInfo } from '../models/info.model'
 import type { Node } from 'react'
 import Helmet from 'react-helmet'
+import { environment } from '../environment'
 import { withStyles, withWidth } from '@material-ui/core'
 import { isSmartphone } from '../helpers/responsive.helper'
 import Grid from '@material-ui/core/Grid'
@@ -63,7 +64,7 @@ class Layout extends React.Component<ProvidedProps & Props> {
         <meta name="author" content="Panepo@github" />
         <link rel="manifest" href="./manifest.json" />
         <link rel="shortcut icon" href="./favicon.ico" />
-        <title>{this.props.title}</title>
+        <title>{this.props.title + ' | ' + environment.title}</title>
       </Helmet>
     )
 

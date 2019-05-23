@@ -34,7 +34,7 @@ class NotReady extends React.Component<ProvidedProps & Props> {
     return (
       <Layout
         helmet={true}
-        title={'Sensor | Uzuki'}
+        title={'Sensor'}
         content={
           <Card className={this.props.classes.paper}>
             {this.props.image.switch ? (

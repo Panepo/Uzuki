@@ -18,6 +18,7 @@ import type {
 import NumberFormat from 'react-number-format'
 import WebcamRectDraw from '../../componments/WebcamRectDraw'
 import { validateRect, validateVideo } from '../../helpers/validate.helper'
+import { environment } from '../../environment'
 import Layout from '../Layout'
 import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core'
@@ -265,8 +266,8 @@ class Setting extends React.Component<ProvidedProps & Props, State> {
       return (
         <WebcamRectDraw
           audio={false}
-          videoWidth={640}
-          videoHeight={360}
+          videoWidth={environment.videoCanvas.width}
+          videoHeight={environment.videoCanvas.height}
           videoConstraints={this.props.setting.video}
           rectColor={'lime'}
           getPosition={rect => this.handleGetPosition(rect)}
@@ -334,7 +335,7 @@ class Setting extends React.Component<ProvidedProps & Props, State> {
     return (
       <Layout
         helmet={true}
-        title={'Camera Settings | Uzuki'}
+        title={'Camera Settings'}
         gridNormal={6}
         gridPhone={10}
         content={

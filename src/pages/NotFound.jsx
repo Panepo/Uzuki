@@ -36,7 +36,7 @@ class NotFound extends React.Component<ProvidedProps & Props> {
     return (
       <Layout
         helmet={true}
-        title={'File Not Found | Uzuki'}
+        title={'File Not Found'}
         content={
           <Card className={this.props.classes.card}>
             <CardActionArea>
