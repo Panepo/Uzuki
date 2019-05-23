@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/Uzuki/precache-manifest.1d423a11a80db18c89d021edac2dee0d.js"
+  "/Uzuki/precache-manifest.63d9353eb8515527a9779f0209d4fd95.js"
 );
 
 workbox.clientsClaim();
