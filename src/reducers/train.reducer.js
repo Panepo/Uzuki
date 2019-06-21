@@ -6,7 +6,8 @@ import type { StateTrain } from '../models/train.model'
 
 const initialState: StateTrain = {
   face: [],
-  data: []
+  data: [],
+  knn: null
 }
 
 export const train = createReducer(initialState, {
@@ -25,5 +26,11 @@ export const train = createReducer(initialState, {
   },
   [actionTrain.TRAIN_DATA_CLEAR](state: StateTrain, action: Action<null>) {
     return { ...state, data: [] }
+  },
+  [actionTrain.TRAIN_KNN_SAVE](state: StateTrain, action: Action<any>) {
+    return { ...state, knn: action.payload }
+  },
+  [actionTrain.TRAIN_KNN_CLEAR](state: StateTrain, action: Action<null>) {
+    return { ...state, knn: null }
   }
 })

@@ -37,3 +37,17 @@ export function dataClear(): Action<null> {
     payload: null
   }
 }
+
+export function knnSave(data: any): Action<any> {
+  return {
+    type: actionTrain.TRAIN_KNN_SAVE,
+    payload: data
+  }
+}
+
+export function knnClear(): Action<null> {
+  return {
+    type: actionTrain.TRAIN_KNN_CLEAR,
+    payload: null
+  }
+}

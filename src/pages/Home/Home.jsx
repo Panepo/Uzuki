@@ -141,6 +141,47 @@ class Home extends React.Component<ProvidedProps & Props> {
       </Card>
     )
 
+    const renderTrainK = (
+      <Card className={this.props.classes.card}>
+        <CardActionArea onClick={this.handleRedirect('traink')}>
+          <CardHeader
+            avatar={<IconTrain color="primary" />}
+            title={
+              <Typography gutterBottom variant="h5" component="h2">
+                Train with KNN
+              </Typography>
+            }
+            subheader={
+              'Upload boss picture and train computer to identify boss with KNN classifier.'
+            }
+            action={
+              this.props.train.data.length > 0 ? (
+                <IconDone className={this.props.classes.icon2} />
+              ) : null
+            }
+          />
+        </CardActionArea>
+      </Card>
+    )
+
+    const renderSensorK = (
+      <Card className={this.props.classes.card}>
+        <CardActionArea onClick={this.handleRedirect('sensork')}>
+          <CardHeader
+            avatar={<IconSensor color="primary" />}
+            title={
+              <Typography gutterBottom variant="h5" component="h2">
+                Sensor with KNN
+              </Typography>
+            }
+            subheader={
+              'Start the sensor with KNN classifier to detect if your boss is approaching.'
+            }
+          />
+        </CardActionArea>
+      </Card>
+    )
+
     return (
       <Layout
         helmet={true}
@@ -163,9 +204,11 @@ class Home extends React.Component<ProvidedProps & Props> {
               </Grid>
             ) : null}
             <Grid item={true} xs={4}>
-              {renderTrain}
               {renderSetting}
+              {renderTrain}
               {this.props.train.data.length > 0 ? renderSensor : null}
+              {renderTrainK}
+              {this.props.train.knn ? renderSensorK : null}
               {renderImage}
               <Github />
             </Grid>
@@ -177,7 +220,15 @@ class Home extends React.Component<ProvidedProps & Props> {
 }
 
 Home.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  image: PropTypes.shape({
+    switch: PropTypes.bool
+  }).isRequired,
+  train: PropTypes.shape({
+    face: PropTypes.arrayOf(PropTypes.object),
+    data: PropTypes.arrayOf(PropTypes.object),
+    knn: PropTypes.any
+  }).isRequired
 }
 
 const mapStateToProps = state => {

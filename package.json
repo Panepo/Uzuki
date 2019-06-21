@@ -29,6 +29,8 @@
   "dependencies": {
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
+    "@tensorflow-models/knn-classifier": "^1.2.0",
+    "@tensorflow/tfjs-core": "^1.2.1",
     "classnames": "^2.2.6",
     "connected-react-router": "^6.3.1",
     "core-js": "^3.0.1",
@@ -63,7 +65,7 @@
     "enzyme-adapter-react-16": "^1.12.1",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1",
-    "flow-bin": "^0.94.0",
+    "flow-bin": "^0.102.0-rc",
     "flow-typed": "^2.5.1",
     "gh-pages": "^1.2.0",
     "husky": "^0.14.3",

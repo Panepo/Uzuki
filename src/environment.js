@@ -13,9 +13,16 @@ class EnvironmentValues {
     height: 360
   }
 
+  useTinyFaceDetector = true
+  useTinyLandmark = true
+
   // TinyFaceDetector options
   tinyInputSize = 160
   tinyThreshold = 0.5
+
+  // SSD Mobilenet v1 options
+  ssdMinConfidence = 0.5
+  ssdMaxResults = 10
 }
 
 // Export as singleton

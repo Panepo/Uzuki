@@ -9,6 +9,8 @@ import * as actionTrain from '../../actions/train.action'
 import type { Dispatch } from '../../models'
 import type { StateTrain } from '../../models/train.model'
 import * as faceapi from 'face-api.js'
+import * as tf from '@tensorflow/tfjs-core'
+import * as knnClassifier from '@tensorflow-models/knn-classifier'
 import { loadModel } from '../../helpers/model.helper'
 import Layout from '../Layout'
 import Loading from '../Loading'
@@ -23,8 +25,6 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import Tooltip from '@material-ui/core/Tooltip'
 import IconButton from '@material-ui/core/IconButton'
 import IconSensor from '@material-ui/icons/Contacts'
-import IconExport from '@material-ui/icons/Archive'
-import IconImport from '@material-ui/icons/Unarchive'
 import IconTrain from '@material-ui/icons/Polymer'
 import IconClear from '@material-ui/icons/HighlightOff'
 import IconAdd from '@material-ui/icons/AddPhotoAlternate'
@@ -72,7 +72,7 @@ type State = {
   processTime: number
 }
 
-class Train extends React.Component<ProvidedProps & Props, State> {
+class TrainKNN extends React.Component<ProvidedProps & Props, State> {
   state = {
     isLoading: true,
     isBusy: false,
@@ -125,40 +125,13 @@ class Train extends React.Component<ProvidedProps & Props, State> {
     this.setState({ isBusy: true }, () => this.FaceTrain())
   }
 
-  handleDataImport = (event: any) => {
-    const files = event.target.files
-    if (files.length > 0) {
-      let fr = new FileReader()
-      fr.onload = e => {
-        this.props.actionsT.dateSave(JSON.parse(e.target.result))
-        this.props.actionsI.infoSet({
-          onoff: true,
-          variant: 'success',
-          message: 'Face file imported'
-        })
-      }
-      fr.readAsText(files.item(0))
-    }
-  }
-
-  handleDataExport = () => {
-    const data =
-      'text/json;charset=utf-8,' +
-      encodeURIComponent(JSON.stringify(this.props.train.data))
-    let downloadAnchorNode = document.createElement('a')
-    downloadAnchorNode.setAttribute('href', 'data:' + data)
-    downloadAnchorNode.setAttribute('download', 'boss.json')
-    downloadAnchorNode.click()
-    downloadAnchorNode.remove()
-  }
-
   handleDataClear = () => {
     this.props.actionsI.infoSet({
       onoff: true,
       variant: 'info',
       message: 'Face file cleared'
     })
-    this.props.actionsT.dataClear()
+    this.props.actionsT.knnClear()
   }
 
   handleFaceClear = () => {
@@ -175,19 +148,14 @@ class Train extends React.Component<ProvidedProps & Props, State> {
   // ================================================================================
   FaceTrain = async () => {
     const tstart = performance.now()
-    const labeledDescriptors = []
+    const classifier = knnClassifier.create()
 
     await Promise.all(
       this.props.train.face.map(async face => {
-        const descriptors = []
         const image = await faceapi.fetchImage(face)
-        descriptors.push(await faceapi.computeFaceDescriptor(image))
-
-        if (descriptors.length > 0) {
-          labeledDescriptors.push(
-            new faceapi.LabeledFaceDescriptors('Boss', descriptors)
-          )
-        }
+        const descriptors = await faceapi.computeFaceDescriptor(image)
+        const tensor = tf.tensor(descriptors)
+        classifier.addExample(tensor, 'Boss')
       })
     )
 
@@ -196,21 +164,12 @@ class Train extends React.Component<ProvidedProps & Props, State> {
       isBusy: false,
       processTime: Math.floor(tend - tstart)
     })
-
-    if (labeledDescriptors.length > 0) {
-      this.props.actionsT.dateSave(labeledDescriptors)
-      this.props.actionsI.infoSet({
-        onoff: true,
-        variant: 'success',
-        message: 'Training success'
-      })
-    } else {
-      this.props.actionsI.infoSet({
-        onoff: true,
-        variant: 'error',
-        message: 'Training failed'
-      })
-    }
+    this.props.actionsT.knnSave(classifier)
+    this.props.actionsI.infoSet({
+      onoff: true,
+      variant: 'success',
+      message: 'Training success'
+    })
   }
 
   // ================================================================================
@@ -246,30 +205,6 @@ class Train extends React.Component<ProvidedProps & Props, State> {
               color="primary"
               onClick={this.handleFaceClear}>
               <IconDelete />
-            </IconButton>
-          </Tooltip>
-        ) : null}
-        <Tooltip title="Import face data from computer">
-          <IconButton
-            className={this.props.classes.icon}
-            component="label"
-            color="primary">
-            <input
-              className={this.props.classes.hidden}
-              type="file"
-              accept="application/json"
-              onChange={this.handleDataImport}
-            />
-            <IconImport />
-          </IconButton>
-        </Tooltip>
-        {this.props.train.data.length > 0 ? (
-          <Tooltip title="Export face data to computer">
-            <IconButton
-              className={this.props.classes.icon}
-              color="primary"
-              onClick={this.handleDataExport}>
-              <IconExport />
             </IconButton>
           </Tooltip>
         ) : null}
@@ -365,7 +300,7 @@ class Train extends React.Component<ProvidedProps & Props, State> {
   }
 }
 
-Train.propTypes = {
+TrainKNN.propTypes = {
   classes: PropTypes.object.isRequired,
   train: PropTypes.shape({
     face: PropTypes.arrayOf(PropTypes.object),
@@ -390,4 +325,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(Train))
+)(withStyles(styles)(TrainKNN))

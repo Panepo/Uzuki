@@ -11,8 +11,8 @@ import type { StateTrain } from '../../models/train.model'
 import type { StateImage } from '../../models/image.model'
 import { withRouter } from 'react-router-dom'
 import * as faceapi from 'face-api.js'
-import { createFaceMatcher } from '../../helpers/face.helper'
-import { loadModel, modelInitial } from '../../helpers/model.helper'
+import * as tf from '@tensorflow/tfjs-core'
+import { loadModel } from '../../helpers/model.helper'
 import { environment } from '../../environment'
 import Layout from '../Layout'
 import { Link } from 'react-router-dom'
@@ -36,7 +36,7 @@ import NotReady from './NotReady'
 import Loading from './Loading'
 import DialogCover from './DialogCover'
 
-const imageSensor = require('../../images/sensor.jpg')
+const imageSensor = require('../../images/sensork.jpg')
 // const imageSensoru = require('../../images/uzukisensor.jpg')
 const imageSensoru = require('../../images/uzuki404.jpg')
 
@@ -97,13 +97,13 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
   }
   interval: number = 0
   tick: number = 0
-  faceMatcher = null
+  classifier = null
 
   componentDidMount = async () => {
-    if (this.props.train.data.length > 0) {
+    if (this.props.train.knn) {
       await loadModel()
-      await modelInitial('initial_black')
       this.setState({ isLoading: false })
+      this.classifier = this.props.train.knn
     }
   }
 
@@ -146,7 +146,6 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
         isSensing: false
       })
     } else {
-      this.faceMatcher = await createFaceMatcher(this.props.train.data)
       this.interval = window.setInterval(async () => await this.faceMain(), 10)
       this.setState({
         isSensing: true
@@ -213,9 +212,10 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
     if (results) {
       faceapi.matchDimensions(canvas, image)
       const resizedResults = faceapi.resizeResults(results, image)
-      resizedResults.forEach(({ detection, descriptor }) => {
-        // $flow-disable-line
-        const label = this.faceMatcher.findBestMatch(descriptor).toString()
+      resizedResults.forEach( async ({ detection, descriptor }) => {
+        const tensor = tf.tensor(descriptor)
+        const predict = await this.classifier.predictClass(tensor, 1)
+        const label = predict.label.toString()
         const options = { label }
         const drawBox = new faceapi.draw.DrawBox(detection.box, options)
         drawBox.draw(canvas)
@@ -364,7 +364,7 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
   }
 
   render() {
-    if (this.props.train.data.length === 0) return <NotReady />
+    if (this.props.train.knn === 0) return <NotReady />
     if (this.state.isLoading) return <Loading />
 
     return (
