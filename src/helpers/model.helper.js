@@ -47,28 +47,3 @@ export const loadModel = async () => {
     await faceapi.loadFaceRecognitionModel(environment.urlProd + 'models')
   }
 }
-
-export const modelInitial = async (canvasId: string) => {
-  const initial = document.getElementById(canvasId)
-  if (environment.useTinyFaceDetector) {
-    await faceapi
-      .detectAllFaces(
-        initial,
-        new faceapi.TinyFaceDetectorOptions({
-          inputSize: environment.tinyInputSize,
-          scoreThreshold: environment.tinyThreshold
-        })
-      )
-      .withFaceLandmarks(environment.useTinyLandmark)
-  } else {
-    await faceapi
-      .detectAllFaces(
-        initial,
-        new faceapi.SsdMobilenetv1Options({
-          minConfidence: environment.ssdMinConfidence,
-          maxResults: environment.ssdMaxResults
-        })
-      )
-      .withFaceLandmarks(environment.useTinyLandmark)
-  }
-}

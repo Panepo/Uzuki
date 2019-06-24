@@ -1,6 +1,8 @@
 // @flow
 
 import * as faceapi from 'face-api.js'
+import { environment } from '../environment'
+import type { FaceOptions } from '../model/misc.model'
 
 export async function createFaceMatcher(
   data: { _label: string, _descriptors: any }[]
@@ -17,6 +19,46 @@ export async function createFaceMatcher(
     })
   )
   return new faceapi.FaceMatcher(labeledFaceDescriptors)
+}
+
+export async function faceEncode(canvas: HTMLCanvasElement, options: FaceOptions) {
+  if (environment.useTinyFaceDetector) {
+    let detections = faceapi.detectAllFaces(
+      canvas,
+      new faceapi.TinyFaceDetectorOptions({
+        inputSize: environment.tinyInputSize,
+        scoreThreshold: environment.tinyThreshold
+      })
+    )
+    if (options && options.expressionsEnabled) {
+      detections = detections.withFaceExpressions()
+    }
+    if (options && (options.landmarksEnabled || options.descriptorsEnabled)) {
+      detections = detections.withFaceLandmarks(environment.useTinyLandmark)
+    }
+    if (options && options.descriptorsEnabled) {
+      detections = detections.withFaceDescriptors()
+    }
+    return await detections
+  } else {
+    let detections = faceapi.detectAllFaces(
+      canvas,
+      new faceapi.SsdMobilenetv1Options({
+        minConfidence: environment.ssdMinConfidence,
+        maxResults: environment.ssdMaxResults
+      })
+    )
+    if (options && options.expressionsEnabled) {
+      detections = detections.withFaceExpressions()
+    }
+    if (options && (options.landmarksEnabled || options.descriptorsEnabled)) {
+      detections = detections.withFaceLandmarks(environment.useTinyLandmark)
+    }
+    if (options && options.descriptorsEnabled) {
+      detections = detections.withFaceDescriptors()
+    }
+    return await detections
+  }
 }
 
 export function extractData(

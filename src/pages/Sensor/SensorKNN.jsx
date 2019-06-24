@@ -12,8 +12,8 @@ import type { StateImage } from '../../models/image.model'
 import { withRouter } from 'react-router-dom'
 import * as faceapi from 'face-api.js'
 import * as tf from '@tensorflow/tfjs-core'
+import { faceEncode } from '../../helpers/face.helper'
 import { loadModel } from '../../helpers/model.helper'
-import { environment } from '../../environment'
 import Layout from '../Layout'
 import { Link } from 'react-router-dom'
 import WebcamCrop from '../../componments/WebcamCrop'
@@ -98,10 +98,19 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
   interval: number = 0
   tick: number = 0
   classifier = null
+  faceOption = {
+    expressionsEnabled: false,
+    landmarksEnabled: true,
+    descriptorsEnabled: true
+  }
 
   componentDidMount = async () => {
     if (this.props.train.knn) {
       await loadModel()
+      const image = document.getElementById('initial_black')
+      if (image instanceof HTMLCanvasElement) {
+        await faceEncode(image, this.faceOption)
+      }
       this.setState({ isLoading: false })
       this.classifier = this.props.train.knn
     }
@@ -198,24 +207,20 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
     canvas: HTMLCanvasElement,
     image: HTMLCanvasElement
   ) => {
-    const results = await faceapi
-      .detectAllFaces(
-        image,
-        new faceapi.TinyFaceDetectorOptions({
-          inputSize: environment.tinyInputSize,
-          scoreThreshold: environment.tinyThreshold
-        })
-      )
-      .withFaceLandmarks(true)
-      .withFaceDescriptors()
+    const results = await faceEncode(image, this.faceOption)
 
     if (results) {
       faceapi.matchDimensions(canvas, image)
       const resizedResults = faceapi.resizeResults(results, image)
-      resizedResults.forEach( async ({ detection, descriptor }) => {
+      resizedResults.forEach(async ({ detection, descriptor }) => {
         const tensor = tf.tensor(descriptor)
         const predict = await this.classifier.predictClass(tensor, 1)
-        const label = predict.label.toString()
+        let label
+        if (predict.confidences[predict.label] > 0.6) {
+          label = predict.label.toString()
+        } else {
+          label = "Unknown"
+        }
         const options = { label }
         const drawBox = new faceapi.draw.DrawBox(detection.box, options)
         drawBox.draw(canvas)
@@ -364,7 +369,7 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
   }
 
   render() {
-    if (this.props.train.knn === 0) return <NotReady />
+    if (!this.props.train.knn) return <NotReady />
     if (this.state.isLoading) return <Loading />
 
     return (
@@ -415,7 +420,7 @@ Sensor.propTypes = {
     })
   }),
   train: PropTypes.shape({
-    face: PropTypes.arrayOf(PropTypes.object),
+    face: PropTypes.arrayOf(PropTypes.string),
     data: PropTypes.arrayOf(PropTypes.object),
     knn: PropTypes.any
   }).isRequired

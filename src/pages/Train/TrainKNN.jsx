@@ -303,7 +303,7 @@ class TrainKNN extends React.Component<ProvidedProps & Props, State> {
 TrainKNN.propTypes = {
   classes: PropTypes.object.isRequired,
   train: PropTypes.shape({
-    face: PropTypes.arrayOf(PropTypes.object),
+    face: PropTypes.arrayOf(PropTypes.string),
     data: PropTypes.arrayOf(PropTypes.object),
     knn: PropTypes.any
   }).isRequired

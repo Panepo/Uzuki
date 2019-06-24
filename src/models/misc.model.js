@@ -28,3 +28,9 @@ export type VideoConstraintsError = {
   width: { onoff: boolean, message: string },
   height: { onoff: boolean, message: string }
 }
+
+export type FaceOptions = {
+  expressionsEnabled: boolean,
+  landmarksEnabled: boolean,
+  descriptorsEnabled: boolean
+}

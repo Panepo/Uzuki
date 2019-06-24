@@ -11,9 +11,8 @@ import type { StateTrain } from '../../models/train.model'
 import type { StateImage } from '../../models/image.model'
 import { withRouter } from 'react-router-dom'
 import * as faceapi from 'face-api.js'
-import { createFaceMatcher } from '../../helpers/face.helper'
-import { loadModel, modelInitial } from '../../helpers/model.helper'
-import { environment } from '../../environment'
+import { createFaceMatcher, faceEncode } from '../../helpers/face.helper'
+import { loadModel } from '../../helpers/model.helper'
 import Layout from '../Layout'
 import { Link } from 'react-router-dom'
 import WebcamCrop from '../../componments/WebcamCrop'
@@ -98,12 +97,21 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
   interval: number = 0
   tick: number = 0
   faceMatcher = null
+  faceOption = {
+    expressionsEnabled: false,
+    landmarksEnabled: true,
+    descriptorsEnabled: true
+  }
 
   componentDidMount = async () => {
     if (this.props.train.data.length > 0) {
       await loadModel()
-      await modelInitial('initial_black')
+      const image = document.getElementById('initial_black')
+      if (image instanceof HTMLCanvasElement) {
+        await faceEncode(image, this.faceOption)
+      }
       this.setState({ isLoading: false })
+      this.classifier = this.props.train.knn
     }
   }
 
@@ -199,16 +207,7 @@ class Sensor extends React.Component<ProvidedProps & Props, State> {
     canvas: HTMLCanvasElement,
     image: HTMLCanvasElement
   ) => {
-    const results = await faceapi
-      .detectAllFaces(
-        image,
-        new faceapi.TinyFaceDetectorOptions({
-          inputSize: environment.tinyInputSize,
-          scoreThreshold: environment.tinyThreshold
-        })
-      )
-      .withFaceLandmarks(true)
-      .withFaceDescriptors()
+    const results = await faceEncode(image, this.faceOption)
 
     if (results) {
       faceapi.matchDimensions(canvas, image)
@@ -415,7 +414,7 @@ Sensor.propTypes = {
     })
   }),
   train: PropTypes.shape({
-    face: PropTypes.arrayOf(PropTypes.object),
+    face: PropTypes.arrayOf(PropTypes.string),
     data: PropTypes.arrayOf(PropTypes.object),
     knn: PropTypes.any
   }).isRequired

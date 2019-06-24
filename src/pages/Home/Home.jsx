@@ -140,7 +140,7 @@ class Home extends React.Component<ProvidedProps & Props> {
         </CardActionArea>
       </Card>
     )
-
+/*
     const renderTrainK = (
       <Card className={this.props.classes.card}>
         <CardActionArea onClick={this.handleRedirect('traink')}>
@@ -181,7 +181,7 @@ class Home extends React.Component<ProvidedProps & Props> {
         </CardActionArea>
       </Card>
     )
-
+*/
     return (
       <Layout
         helmet={true}
@@ -207,8 +207,6 @@ class Home extends React.Component<ProvidedProps & Props> {
               {renderSetting}
               {renderTrain}
               {this.props.train.data.length > 0 ? renderSensor : null}
-              {renderTrainK}
-              {this.props.train.knn ? renderSensorK : null}
               {renderImage}
               <Github />
             </Grid>
