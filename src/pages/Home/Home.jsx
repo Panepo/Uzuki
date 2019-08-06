@@ -20,7 +20,7 @@ import IconTrain from '@material-ui/icons/Polymer'
 import IconSettings from '@material-ui/icons/Settings'
 import IconSensor from '@material-ui/icons/Contacts'
 import IconDone from '@material-ui/icons/Done'
-import IconImage from '@material-ui/icons/Image'
+// import IconImage from '@material-ui/icons/Image'
 import lightGreen from '@material-ui/core/colors/lightGreen'
 
 import Github from './Github'
@@ -114,7 +114,7 @@ class Home extends React.Component<ProvidedProps & Props> {
         </CardActionArea>
       </Card>
     )
-
+/*
     const renderImage = (
       <Card className={this.props.classes.card}>
         <CardActionArea
@@ -140,7 +140,7 @@ class Home extends React.Component<ProvidedProps & Props> {
         </CardActionArea>
       </Card>
     )
-/*
+
     const renderTrainK = (
       <Card className={this.props.classes.card}>
         <CardActionArea onClick={this.handleRedirect('traink')}>
@@ -207,7 +207,6 @@ class Home extends React.Component<ProvidedProps & Props> {
               {renderSetting}
               {renderTrain}
               {this.props.train.data.length > 0 ? renderSensor : null}
-              {renderImage}
               <Github />
             </Grid>
           </Grid>
