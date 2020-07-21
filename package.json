@@ -60,7 +60,7 @@
     "validator": "^10.11.0"
   },
   "devDependencies": {
-    "codecov": "^3.6.5",
+    "codecov": "^3.7.1",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.12.1",
     "eslint-config-prettier": "^4.1.0",
