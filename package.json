@@ -57,7 +57,7 @@
     "redux-thunk": "^2.3.0",
     "regenerator-runtime": "^0.13.2",
     "typeface-roboto": "^0.0.54",
-    "validator": "^10.11.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "codecov": "^3.7.1",
